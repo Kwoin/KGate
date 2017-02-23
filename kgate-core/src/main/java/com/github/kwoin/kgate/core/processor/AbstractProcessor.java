@@ -12,16 +12,47 @@ import java.net.Socket;
 public abstract class AbstractProcessor implements IProcessor {
 
 
-    @Override
-    public void process(Socket source, Socket client, IContext context) {
+    protected IChain sourceToTargetChain;
+    protected IChain targetToSourceChain;
 
-        IChain chain = initializeChain();
-        chain.run(source, client, context);
+
+    public AbstractProcessor() {
+
+        sourceToTargetChain = initializeSourceToTargetChain();
+        targetToSourceChain = initializeTargetToSourceChain();
 
     }
 
 
-    protected abstract IChain initializeChain();
+    @Override
+    public IChain getSourceToTargetChain() {
+
+        return sourceToTargetChain;
+
+    }
+
+
+    @Override
+    public IChain getTargetToSourceChain() {
+
+        return targetToSourceChain;
+
+    }
+
+
+    @Override
+    public void process(Socket source, Socket client, IContext context) {
+
+        sourceToTargetChain.run(source, client, context);
+        targetToSourceChain.run(source, client, context);
+
+    }
+
+
+    protected abstract IChain initializeSourceToTargetChain();
+
+
+    protected abstract IChain initializeTargetToSourceChain();
 
 
 }

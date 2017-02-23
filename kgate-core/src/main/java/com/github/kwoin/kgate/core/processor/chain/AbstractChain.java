@@ -1,6 +1,5 @@
 package com.github.kwoin.kgate.core.processor.chain;
 
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.context.IContext;
 
 import java.net.Socket;
@@ -37,10 +36,15 @@ public abstract class AbstractChain implements IChain {
 
 
     @Override
-    public void run(Socket source, Socket client, IContext context) {
+    public void run(Socket source, Socket target, IContext context, IChain callingChain) {
 
-        for (int i = 0; i < commands.size() && !interrupt; i++)
-            commands.get(i).run(source, client, context, this);
+        int k=0;
+        while(k < commands.size() && !interrupt) {
+            commands.get(k).run(source, target, context, this);
+        }
+
+        if(interrupt && callingChain != null)
+            callingChain.interruptChain();
 
     }
 
