@@ -1,5 +1,6 @@
-package com.github.kwoin.kgate.core.server;
+package com.github.kwoin.kgate.core.gateway.server;
 
+import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.processor.IProcessorFactory;
 
@@ -12,13 +13,13 @@ import java.net.Socket;
 public interface IServer {
 
 
-    void start() throws KGateServerException;
+    void start(IContext context) throws KGateServerException;
 
     void stop() throws KGateServerException;
 
     void setProcessorFactory(IProcessorFactory processorFactory);
 
-    void onNewConnection(Socket source);
+    void onNewConnexion(Socket source);
 
 
 }

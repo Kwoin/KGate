@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 
 /**
@@ -21,7 +22,7 @@ public class KGateConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(KGateConfig.class);
     private static final Configurations CONFIG2 = new Configurations();
-    private static CompositeConfiguration config = new CompositeConfiguration();
+    private static CompositeConfiguration config;
 
 
     public static CompositeConfiguration getConfig() {
@@ -36,10 +37,30 @@ public class KGateConfig {
 
     public static void loadConfiguration() {
 
+        config = new CompositeConfiguration();
+
         addSystemPropertyConfiguration(config);
         addActiveDirectoryConfiguration(config);
         addClasspathConfiguration(config);
         addDefaultConfigurations(config);
+
+        if(logger.isDebugEnabled()) {
+
+            StringBuilder sb = new StringBuilder().append("\n")
+                    .append("=======================\n")
+                    .append("=    CONFIGURATION    =\n")
+                    .append("=======================\n");
+            Iterator<String> keys = config.getKeys();
+            while(keys.hasNext()) {
+                String key = keys.next();
+                sb.append(key + "\t: " + config.getString(key) + "\n");
+            }
+            sb.append("=======================\n")
+                    .append("=  END CONFIGURATION  =\n")
+                    .append("=======================\n");
+            logger.debug(sb.toString());
+
+        }
 
     }
 

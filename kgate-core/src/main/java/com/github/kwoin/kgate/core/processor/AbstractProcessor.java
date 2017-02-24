@@ -43,8 +43,8 @@ public abstract class AbstractProcessor implements IProcessor {
     @Override
     public void process(Socket source, Socket client, IContext context) {
 
-        sourceToTargetChain.run(source, client, context);
-        targetToSourceChain.run(source, client, context);
+        sourceToTargetChain.run(source, client, context, null);
+        targetToSourceChain.run(source, client, context, null);
 
     }
 

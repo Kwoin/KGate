@@ -3,6 +3,8 @@ package com.github.kwoin.kgate.core.context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -29,11 +31,13 @@ public class DefaultContext implements IContext {
 
         this.scope = scope;
         this.upperContext = upperContext;
+        variables = new HashMap();
 
     }
 
 
     @Override
+    @Nullable
     public Object getVariable(EScope scope, String key) {
 
         return scope == this.scope || upperContext == null
@@ -44,7 +48,7 @@ public class DefaultContext implements IContext {
 
 
     @Override
-    public void setVariable(EScope scope, String key, Object value) {
+    public void setVariable(EScope scope, String key, @Nullable Object value) {
 
         if(scope == this.scope)
             variables.put(key, value);

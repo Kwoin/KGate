@@ -3,9 +3,7 @@ package com.github.kwoin.kgate.core.processor.chain;
 import com.github.kwoin.kgate.core.context.IContext;
 
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 
 /**
@@ -14,14 +12,13 @@ import java.util.Properties;
 public abstract class AbstractChain implements IChain {
 
 
-    protected Properties configuration;
     protected List<ICommand> commands;
     protected boolean interrupt;
 
 
     public AbstractChain() {
 
-        commands = new ArrayList<>();
+        commands = initializeChainCommands();
         interrupt = false;
 
     }
@@ -41,6 +38,7 @@ public abstract class AbstractChain implements IChain {
         int k=0;
         while(k < commands.size() && !interrupt) {
             commands.get(k).run(source, target, context, this);
+            k++;
         }
 
         if(interrupt && callingChain != null)
