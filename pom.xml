@@ -6,7 +6,7 @@
     <groupId>com.github.kwoin</groupId>
     <artifactId>kgate</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>kgate-core</module>
     </modules>
