@@ -1,9 +1,7 @@
-package com.github.kwoin.kgate.core;
+package com.github.kwoin.kgate.core.gateway;
 
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
-import com.github.kwoin.kgate.core.gateway.DefaultGateway;
-import com.github.kwoin.kgate.core.gateway.IGateway;
 import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
 import com.github.kwoin.kgate.core.processor.AbstractProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessor;

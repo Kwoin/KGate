@@ -6,6 +6,7 @@ import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.processor.IProcessorFactory;
+import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +66,7 @@ public class DefaultServer implements IServer {
                 while(!isStopped) {
 
                     try {
-                        onNewConnexion(serverSocket.accept());
+                        onNewConnexion(new KGateSocket(serverSocket.accept()));
                     } catch (IOException e) {
                         logger.error("Connexion failed", e);
                     }
