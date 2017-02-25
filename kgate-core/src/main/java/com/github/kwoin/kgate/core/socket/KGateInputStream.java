@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.core.stream;
+package com.github.kwoin.kgate.core.socket;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -35,8 +35,9 @@ public class KGateInputStream extends FilterInputStream {
         if(writeCursor == BUFFER_SIZE)
             addBuffer();
 
-        int[] buffer = buffers.get(buffers.size() - 1);
-        buffer[writeCursor++] = c;
+        int[] buffer = buffers.get(writeCursor / BUFFER_SIZE);
+        buffer[writeCursor % BUFFER_SIZE] = c;
+        writeCursor++;
 
     }
 
@@ -44,7 +45,6 @@ public class KGateInputStream extends FilterInputStream {
     private void addBuffer() {
 
         buffers.add(new int[BUFFER_SIZE]);
-        writeCursor = 0;
 
     }
 
@@ -87,31 +87,21 @@ public class KGateInputStream extends FilterInputStream {
 
         int c = -1;
 
-        if(isBufferizing) {
-            c = in.read();
-            bufferize(c);
-            if( c == -1) {
-                isBufferizing = false;
-                readCursor = (buffers.size() - 1) * BUFFER_SIZE + writeCursor - 1;
-            }
-        } else {
+        if(readCursor < writeCursor) {
             int bufferIndex = readCursor / BUFFER_SIZE;
             int byteIndex = readCursor % BUFFER_SIZE;
             c = buffers.get(bufferIndex)[byteIndex];
-            if( c != -1)
-                readCursor++;
-
+        } else if(readCursor == writeCursor) {
+            c = in.read();
+            bufferize(c);
+        } else {
+            throw new IndexOutOfBoundsException("readCursor > writeCursor");
         }
 
+        if(c != -1)
+            readCursor++;
+
         return c;
-
-    }
-
-
-    @Override
-    public synchronized void mark(int readlimit) {
-
-        // no op
 
     }
 
@@ -125,17 +115,19 @@ public class KGateInputStream extends FilterInputStream {
 
 
     @Override
-    public boolean markSupported() {
+    public void close() throws IOException {
 
-        return false;
+        in.close();
 
     }
 
 
-    @Override
-    public void close() throws IOException {
+    public void clear() {
 
-        in.close();
+        buffers.clear();
+        addBuffer();
+        writeCursor = 0;
+        readCursor = 0;
 
     }
 

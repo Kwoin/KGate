@@ -6,7 +6,7 @@
     <groupId>com.github.kwoin</groupId>
     <artifactId>kgate</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <modules>
         <module>kgate-core</module>
     </modules>
@@ -78,6 +78,9 @@
                 <version>1.0-m5.1</version>
                 <configuration>
                     <noDeploy>true</noDeploy>
+                    <pushFeatures>true</pushFeatures>
+                    <pushReleases>true</pushReleases>
+                    <pushHotfixes>true</pushHotfixes>
                 </configuration>
             </plugin>
         </plugins>
