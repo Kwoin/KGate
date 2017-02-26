@@ -3,7 +3,10 @@ package com.github.kwoin.kgate.core.gateway;
 import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
+import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
 import com.github.kwoin.kgate.core.gateway.server.IServer;
+import com.github.kwoin.kgate.core.processor.IProcessorFactory;
+import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,21 +22,18 @@ public class DefaultGateway implements IGateway {
     protected IServer server;
 
 
-    public DefaultGateway(IServer server) {
+    public DefaultGateway() {
 
-        this.server = server;
         started = false;
+        this.server = new DefaultServer();
 
     }
 
 
     @Override
-    public void setServer(IServer server) {
+    public IServer getServer() {
 
-        if(started)
-            logger.warn("Cannot reset server while server is running");
-        else
-            this.server = server;
+        return server;
 
     }
 
@@ -56,5 +56,28 @@ public class DefaultGateway implements IGateway {
 
     }
 
+
+    @Override
+    public void setProcessorFactory(IProcessorFactory processorFactory) {
+
+        server.setProcessorFactory(processorFactory);
+
+    }
+
+
+    @Override
+    public void setSourceToTargetChainFactory(IChainFactory sourceToTargetChainFactory) {
+
+        server.setSourceToTargetChainFactory(sourceToTargetChainFactory);
+
+    }
+
+
+    @Override
+    public void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory) {
+
+        server.setTargetToSourceChainFactory(targetToSourceChainFactory);
+
+    }
 
 }

@@ -2,7 +2,6 @@ package com.github.kwoin.kgate.core.socket;
 
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -18,6 +17,7 @@ public class KGateSocket extends Socket {
 
 
     private Socket socket;
+    protected KGateInputStream in;
 
 
     public KGateSocket(Socket socket) {
@@ -78,8 +78,11 @@ public class KGateSocket extends Socket {
 
 
     public KGateInputStream getInputStream() throws IOException {
-        InputStream is = socket.getInputStream();
-        return new KGateInputStream(is);
+
+        if(in == null)
+            in = new KGateInputStream(socket.getInputStream());
+
+        return in;
     }
 
 
