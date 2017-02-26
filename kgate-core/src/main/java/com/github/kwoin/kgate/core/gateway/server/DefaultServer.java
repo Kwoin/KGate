@@ -5,7 +5,12 @@ import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
+import com.github.kwoin.kgate.core.processor.DefaultProcessor;
+import com.github.kwoin.kgate.core.processor.IProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessorFactory;
+import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
+import com.github.kwoin.kgate.core.processor.chain.IChain;
+import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +34,36 @@ public class DefaultServer implements IServer {
 
     protected ServerSocket serverSocket;
     protected IProcessorFactory processorFactory;
+    protected IChainFactory sourceToTargetChainFactory;
+    protected IChainFactory targetToSourceChainFactory;
     protected ExecutorService threadPool;
     protected boolean isStopped;
     protected IContext context;
 
 
-    public DefaultServer(IProcessorFactory processorFactory) {
+    public DefaultServer() {
 
-        this.processorFactory = processorFactory;
+        processorFactory = new IProcessorFactory() {
+            @Override
+            public IProcessor newProcessor() {
+                return new DefaultProcessor();
+            }
+        };
+
+        sourceToTargetChainFactory = new IChainFactory() {
+            @Override
+            public IChain newChain() {
+                return new DefaultChain();
+            }
+        };
+
+        targetToSourceChainFactory = new IChainFactory() {
+            @Override
+            public IChain newChain() {
+                return new DefaultChain();
+            }
+        };
+
 
     }
 
@@ -68,7 +95,8 @@ public class DefaultServer implements IServer {
                     try {
                         onNewConnexion(new KGateSocket(serverSocket.accept()));
                     } catch (IOException e) {
-                        logger.error("Connexion failed", e);
+                        if(!serverSocket.isClosed())
+                            logger.error("Connexion failed", e);
                     }
 
                 }
@@ -87,7 +115,7 @@ public class DefaultServer implements IServer {
         isStopped = true;
         try {
             serverSocket.close();
-            threadPool.shutdown();
+            threadPool.shutdownNow();
         } catch (IOException e) {
             logger.error("Error on closing server", e);
         }
@@ -99,6 +127,22 @@ public class DefaultServer implements IServer {
     public void setProcessorFactory(IProcessorFactory processorFactory) {
 
         this.processorFactory = processorFactory;
+
+    }
+
+
+    @Override
+    public void setSourceToTargetChainFactory(IChainFactory sourceToTargetChainFactory) {
+
+        this.sourceToTargetChainFactory = sourceToTargetChainFactory;
+
+    }
+
+
+    @Override
+    public void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory) {
+
+        this.targetToSourceChainFactory = targetToSourceChainFactory;
 
     }
 
@@ -123,7 +167,10 @@ public class DefaultServer implements IServer {
                     IContext sessionContext = new DefaultContext(IContext.ECoreScope.SESSION, context);
                     sessionContext.setVariable(IContext.ECoreScope.SESSION, "direction", EDirection.REQUEST);
 
-                    processorFactory.newProcessor().process(source, client, context);
+                    IProcessor processor = processorFactory.newProcessor();
+                    processor.setSourceToTargetChainFactory(sourceToTargetChainFactory);
+                    processor.setTargetToSourceChainFactory(targetToSourceChainFactory);
+                    processor.process(source, client, context);
 
                 } catch (IOException|NoSuchElementException e) {
                     logger.error("Cannot instantiate connexion", e);

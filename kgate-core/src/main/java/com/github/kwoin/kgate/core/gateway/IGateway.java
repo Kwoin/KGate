@@ -2,6 +2,8 @@ package com.github.kwoin.kgate.core.gateway;
 
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.gateway.server.IServer;
+import com.github.kwoin.kgate.core.processor.IProcessorFactory;
+import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 
 
 /**
@@ -9,11 +11,16 @@ import com.github.kwoin.kgate.core.gateway.server.IServer;
  */
 public interface IGateway {
 
-    void setServer(IServer server);
+    IServer getServer();
 
     void start() throws KGateServerException;
 
     void stop() throws KGateServerException;
 
+    void setProcessorFactory(IProcessorFactory processorFactory);
+
+    void setSourceToTargetChainFactory(IChainFactory sourceToTargetChainFactory);
+
+    void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory);
 
 }
