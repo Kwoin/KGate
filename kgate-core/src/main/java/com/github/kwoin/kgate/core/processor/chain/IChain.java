@@ -1,5 +1,8 @@
 package com.github.kwoin.kgate.core.processor.chain;
 
+import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
+import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
+
 import java.util.List;
 
 
@@ -8,6 +11,7 @@ import java.util.List;
  */
 public interface IChain extends ICommand {
 
+    void setCommandListFactory(ICommandListFactory commandListFactory);
 
     List<ICommand> getCommands();
 
