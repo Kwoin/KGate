@@ -20,12 +20,22 @@ public class DefaultGateway implements IGateway {
     private final Logger logger = LoggerFactory.getLogger(DefaultGateway.class);
     protected boolean started;
     protected IServer server;
+    protected IContext context;
 
 
     public DefaultGateway() {
 
         started = false;
-        this.server = new DefaultServer();
+        server = new DefaultServer();
+        context = new DefaultContext(IContext.ECoreScope.APPLICATION);
+
+    }
+
+
+    @Override
+    public IContext getContext() {
+
+        return context;
 
     }
 
@@ -41,7 +51,7 @@ public class DefaultGateway implements IGateway {
     @Override
     public void start() throws KGateServerException {
 
-        server.start(new DefaultContext(IContext.ECoreScope.APPLICATION));
+        server.start(context);
         started = true;
 
     }

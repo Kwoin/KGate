@@ -60,4 +60,11 @@ public class DefaultContext implements IContext {
     }
 
 
+    @Override
+    public EScope getScope() {
+
+        return scope;
+
+    }
+
 }
