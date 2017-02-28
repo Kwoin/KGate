@@ -102,7 +102,7 @@ public class KGateTest {
 
         IGateway gateway = new DefaultGateway();
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
-        //server.setSoTimeout(1000);
+        server.setSoTimeout(1000);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

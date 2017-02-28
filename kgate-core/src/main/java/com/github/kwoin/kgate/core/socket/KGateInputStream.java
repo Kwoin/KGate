@@ -121,6 +121,14 @@ public class KGateInputStream extends FilterInputStream {
     }
 
 
+    @Override
+    public int available() throws IOException {
+
+        return useBuffer ? writeCursor : in.available();
+
+    }
+
+
     public void clear() {
 
         buffers.clear();

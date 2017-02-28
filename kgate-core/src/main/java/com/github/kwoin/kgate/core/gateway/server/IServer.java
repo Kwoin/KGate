@@ -24,7 +24,7 @@ public interface IServer {
 
     void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory);
 
-    void onNewConnexion(Socket source);
+    void onNewConnexion(Socket source, IContext context);
 
 
 }
