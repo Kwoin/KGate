@@ -3,8 +3,9 @@ package com.github.kwoin.kgate.core.processor.chain;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleRelayer;
+import com.github.kwoin.kgate.core.processor.chain.command.SimpleRelayerCommand;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,7 @@ public class DefaultChain implements IChain {
         commandListFactory = new ICommandListFactory() {
             @Override
             public List<ICommand> newCommandList() {
-                return Arrays.asList(new SimpleRelayer());
+                return Arrays.asList(new SimpleRelayerCommand());
             }
         };
 
@@ -51,13 +52,14 @@ public class DefaultChain implements IChain {
 
 
     @Override
-    public void run(Socket source, Socket target, IContext context, IChain callingChain) {
+    public void run(Socket source, Socket target, IContext context, IChain callingChain) throws IOException {
 
         commands = commandListFactory.newCommandList();
 
         int k=0;
         while(k < commands.size() && !interrupt) {
             commands.get(k).run(source, target, context, this);
+            source.getInputStream().reset();
             k++;
         }
 

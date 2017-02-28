@@ -15,6 +15,7 @@ public interface IContext {
 
     void setVariable(EScope scope, String key, @Nullable Object value);
 
+    EScope getScope();
 
     interface EScope {
 

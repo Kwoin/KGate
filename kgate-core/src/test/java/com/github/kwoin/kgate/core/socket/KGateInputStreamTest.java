@@ -31,13 +31,11 @@ public class KGateInputStreamTest {
         Assert.assertEquals('k', buf[0]);
         Assert.assertEquals('w', buf[1]);
         Assert.assertEquals('o', buf[2]);
-        Assert.assertEquals('i', buf[3]);
-        Assert.assertEquals('n', buf[4]);
-        Assert.assertEquals(-1, in.read());
+        Assert.assertEquals(0, buf[3]);
+        Assert.assertEquals(0, buf[4]);
 
-        in.reset();
         in.clear();
-        Assert.assertEquals(-1, in.read());
+        Assert.assertEquals('i', in.read());
 
     }
 
@@ -65,13 +63,12 @@ public class KGateInputStreamTest {
         Assert.assertEquals('a', buf[0]);
         Assert.assertEquals('b', buf[1]);
         Assert.assertEquals('c', buf[2]);
-        Assert.assertEquals('d', buf[3]);
-        Assert.assertEquals('e', buf[4]);
-        Assert.assertEquals((byte)('a'+1025), buf[1025]);
-        Assert.assertEquals(-1, in.read());
+        Assert.assertEquals(0, buf[3]);
+        Assert.assertEquals(0, buf[4]);
 
-        in.reset();
         in.clear();
+        in.read(buf, 3, 1023);
+        Assert.assertEquals((byte)('a'+1025), buf[1025]);
         Assert.assertEquals(-1, in.read());
 
         buf = new byte[3];
