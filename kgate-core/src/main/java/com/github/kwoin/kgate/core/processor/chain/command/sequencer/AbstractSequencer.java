@@ -40,6 +40,7 @@ public class AbstractSequencer implements ICommand, ISequencer {
         while((i = in.read()) != -1) {
 
            ESequencerResult result = push((byte) i);
+
            if(result != ESequencerResult.CONTINUE) {
                IContext messageContext = new DefaultContext(IContext.ECoreScope.MESSAGE, context);
                in.reset();

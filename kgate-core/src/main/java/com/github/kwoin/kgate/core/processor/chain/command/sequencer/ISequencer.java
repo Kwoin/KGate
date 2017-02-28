@@ -9,4 +9,5 @@ public interface ISequencer {
     ESequencerResult push(byte b);
 
 
+
 }
