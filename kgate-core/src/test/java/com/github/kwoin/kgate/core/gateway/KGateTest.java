@@ -113,7 +113,8 @@ public class KGateTest {
                             && 'o' == target.getInputStream().read()
                             && 'i' == target.getInputStream().read()
                             && 'n' == target.getInputStream().read()
-                            && 255 == target.getInputStream().read();
+                            && -1 == target.getInputStream().read();
+                    target.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -38,7 +38,6 @@ public class DefaultServer implements IServer {
     protected IChainFactory targetToSourceChainFactory;
     protected ExecutorService threadPool;
     protected boolean isStopped;
-    protected IContext context;
 
 
     public DefaultServer() {
@@ -93,7 +92,7 @@ public class DefaultServer implements IServer {
                 while(!isStopped) {
 
                     try {
-                        onNewConnexion(new KGateSocket(serverSocket.accept()));
+                        onNewConnexion(new KGateSocket(serverSocket.accept()), context);
                     } catch (IOException e) {
                         if(!serverSocket.isClosed())
                             logger.error("Connexion failed", e);
@@ -148,7 +147,7 @@ public class DefaultServer implements IServer {
 
 
     @Override
-    public void onNewConnexion(Socket source) {
+    public void onNewConnexion(Socket source, IContext context) {
 
         logger.info("New connexion");
 
@@ -162,7 +161,7 @@ public class DefaultServer implements IServer {
                     String host = KGateConfig.getConfig().getString("kgate.core.client.host");
                     KGateConfig.getConfig().setThrowExceptionOnMissing(false);
                     int port = KGateConfig.getConfig().getInt("kgate.core.client.port");
-                    Socket client = new Socket(host, port);
+                    Socket client = new KGateSocket(new Socket(host, port));
 
                     IContext sessionContext = new DefaultContext(IContext.ECoreScope.SESSION, context);
                     sessionContext.setVariable(IContext.ECoreScope.SESSION, "direction", EDirection.REQUEST);
@@ -170,7 +169,7 @@ public class DefaultServer implements IServer {
                     IProcessor processor = processorFactory.newProcessor();
                     processor.setSourceToTargetChainFactory(sourceToTargetChainFactory);
                     processor.setTargetToSourceChainFactory(targetToSourceChainFactory);
-                    processor.process(source, client, context);
+                    processor.process(source, client, sessionContext);
 
                 } catch (IOException|NoSuchElementException e) {
                     logger.error("Cannot instantiate connexion", e);

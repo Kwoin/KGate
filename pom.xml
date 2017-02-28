@@ -6,7 +6,7 @@
     <groupId>com.github.kwoin</groupId>
     <artifactId>kgate</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <modules>
         <module>kgate-core</module>
     </modules>
@@ -68,7 +68,7 @@
     <scm>
         <url>https://github.com/Kwoin/KGate.git</url>
         <connection>scm:git:git://github.com/Kwoin/KGate.git</connection>
-        <developerConnection>scm:git:git@github.com:Kwoin/KGate.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/Kwoin/KGate.git</developerConnection>
     </scm>
 
     <build>
