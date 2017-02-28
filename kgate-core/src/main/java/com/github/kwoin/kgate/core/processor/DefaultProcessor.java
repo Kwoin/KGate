@@ -62,38 +62,71 @@ public class DefaultProcessor implements IProcessor {
 
         logger.trace("process start");
 
-        try {
+        Thread sourceToTargetThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            sourceToTargetChainFactory.newChain().run(source, client, context, null);
-            targetToSourceChainFactory.newChain().run(client, source, context, null);
-
-        } catch (IOException e) {
-            if(source.isClosed()) {
-                logger.info("Source closed, closing target...");
                 try {
-                    client.close();
-                } catch (IOException e1) {
-                    logger.error("Could not close target", e1);
-                }
-            } else if(client.isClosed()) {
-                logger.info("Target closed, closing source...");
-                try {
-                    source.close();
-                } catch (IOException e1) {
-                    logger.error("Could not close source", e1);
-                }
-            } else {
-                logger.error("Unexpected error", e);
-                try  {
-                    client.close();
-                    source.close();
-                } catch (IOException e1) {
-                    logger.error("Unexpected error", e);
+                    sourceToTargetChainFactory.newChain().run(source, client, context, null);
+                } catch (IOException e) {
+                    handleChainException(e, source, client);
                 }
             }
+        });
+
+        Thread targetToSourceThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    targetToSourceChainFactory.newChain().run(client, source, context, null);
+                } catch (IOException e) {
+                    handleChainException(e, source, client);
+                }
+            }
+        });
+
+        try {
+            sourceToTargetThread.start();
+            targetToSourceThread.start();
+
+            sourceToTargetThread.join();
+            targetToSourceThread.join();
+        } catch (InterruptedException e) {
+            logger.error("Processor interrupted", e);
         }
 
         logger.trace("process end");
+
+    }
+
+
+    protected void handleChainException(IOException e, Socket source, Socket client) {
+
+
+        if(source.isClosed() && !client.isClosed()) {
+            logger.info("Source closed, closing target...");
+            try {
+                client.close();
+            } catch (IOException e1) {
+                logger.error("Could not close target", e1);
+            }
+        } else if(client.isClosed() && !source.isClosed()) {
+            logger.info("Target closed, closing source...");
+            try {
+                source.close();
+            } catch (IOException e1) {
+                logger.error("Could not close source", e1);
+            }
+        } else if(!client.isClosed() && !source.isClosed()){
+            logger.error("Unexpected error", e);
+            try  {
+                client.close();
+                source.close();
+            } catch (IOException e1) {
+                logger.error("Unexpected error", e);
+            }
+        }
 
     }
 

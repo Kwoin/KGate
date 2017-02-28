@@ -102,7 +102,7 @@ public class KGateTest {
 
         IGateway gateway = new DefaultGateway();
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
-        server.setSoTimeout(1000);
+        //server.setSoTimeout(1000);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -113,7 +113,8 @@ public class KGateTest {
                             && 'o' == target.getInputStream().read()
                             && 'i' == target.getInputStream().read()
                             && 'n' == target.getInputStream().read()
-                            && 255 == target.getInputStream().read();
+                            && -1 == target.getInputStream().read();
+                    target.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

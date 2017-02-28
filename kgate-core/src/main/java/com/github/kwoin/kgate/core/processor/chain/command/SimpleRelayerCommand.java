@@ -25,6 +25,11 @@ public class SimpleRelayerCommand implements ICommand {
         while((i = source.getInputStream().read()) != -1)
             target.getOutputStream().write(i);
 
+        if(context.getScope() == IContext.ECoreScope.SESSION) {
+            source.close();
+            target.close();
+        }
+
     }
 
 
