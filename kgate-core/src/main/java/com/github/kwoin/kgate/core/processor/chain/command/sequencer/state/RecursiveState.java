@@ -45,7 +45,7 @@ public class RecursiveState extends AbstractState {
     @Override
     public ESequencerResult push(byte b) {
 
-        // add a reset method to State contract ?
+        // add a reset method to State contract ? test
 
     }
 }
