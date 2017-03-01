@@ -79,7 +79,7 @@ public class SequencerTest {
     }
 
 
-    public class MockSequencer extends AbstractSequencer {
+    public class MockSequencer extends AbstractSequencerCommand {
 
 
         public MockSequencer() {
