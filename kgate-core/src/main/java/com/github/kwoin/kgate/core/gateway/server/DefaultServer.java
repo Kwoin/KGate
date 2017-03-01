@@ -92,7 +92,7 @@ public class DefaultServer implements IServer {
                 while(!isStopped) {
 
                     try {
-                        onNewConnexion(new KGateSocket(serverSocket.accept()), context);
+                        onNewConnexion(serverSocket.accept(), context);
                     } catch (IOException e) {
                         if(!serverSocket.isClosed())
                             logger.error("Connexion failed", e);
@@ -157,11 +157,13 @@ public class DefaultServer implements IServer {
 
                 try {
 
+                    KGateSocket kgateSocketSource = new KGateSocket(source);
+
                     KGateConfig.getConfig().setThrowExceptionOnMissing(true);
                     String host = KGateConfig.getConfig().getString("kgate.core.client.host");
                     KGateConfig.getConfig().setThrowExceptionOnMissing(false);
                     int port = KGateConfig.getConfig().getInt("kgate.core.client.port");
-                    Socket client = new KGateSocket(new Socket(host, port));
+                    KGateSocket kgateSocketClient = new KGateSocket(new Socket(host, port));
 
                     IContext sessionContext = new DefaultContext(IContext.ECoreScope.SESSION, context);
                     sessionContext.setVariable(IContext.ECoreScope.SESSION, "direction", EDirection.REQUEST);
@@ -169,7 +171,7 @@ public class DefaultServer implements IServer {
                     IProcessor processor = processorFactory.newProcessor();
                     processor.setSourceToTargetChainFactory(sourceToTargetChainFactory);
                     processor.setTargetToSourceChainFactory(targetToSourceChainFactory);
-                    processor.process(source, client, sessionContext);
+                    processor.process(kgateSocketSource, kgateSocketClient, sessionContext);
 
                 } catch (IOException|NoSuchElementException e) {
                     logger.error("Cannot instantiate connexion", e);

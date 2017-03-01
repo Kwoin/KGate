@@ -6,9 +6,9 @@ import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.socket.KGateInputStream;
+import com.github.kwoin.kgate.core.socket.KGateSocket;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author P. WILLEMET
  */
-public class AbstractSequencer implements ICommand, ISequencer {
+public class AbstractSequencerCommand implements ICommand, ISequencer {
 
 
     protected Map<ISequencer, ESequencerResult> sequencerComponents;
@@ -24,7 +24,7 @@ public class AbstractSequencer implements ICommand, ISequencer {
     protected IChainFactory onUnhandledChainFactory;
 
 
-    public AbstractSequencer() {
+    public AbstractSequencerCommand() {
 
         sequencerComponents = new HashMap<>();
 
@@ -32,7 +32,7 @@ public class AbstractSequencer implements ICommand, ISequencer {
 
 
     @Override
-    public void run(Socket source, Socket target, IContext context, IChain callingChain) throws IOException {
+    public void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException {
 
         KGateInputStream in = ((KGateInputStream) source.getInputStream());
         int i;
