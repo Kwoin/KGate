@@ -1,32 +1,31 @@
-package com.github.kwoin.kgate.core.processor.chain.command.sequencer;
+package com.github.kwoin.kgate.core.processor.chain.command;
 
 import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ISequencer;
 import com.github.kwoin.kgate.core.socket.KGateInputStream;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
  * @author P. WILLEMET
  */
-public class AbstractSequencerCommand implements ICommand, ISequencer {
+public class AbstractSequencerCommand implements ICommand {
 
 
-    protected Map<ISequencer, ESequencerResult> sequencerComponents;
+    protected ISequencer sequencer;
     protected IChainFactory onSeparatorChainFactory;
     protected IChainFactory onUnhandledChainFactory;
 
 
-    public AbstractSequencerCommand() {
+    public AbstractSequencerCommand(ISequencer sequencer) {
 
-        sequencerComponents = new HashMap<>();
+        this.sequencer = sequencer;
 
     }
 
@@ -39,7 +38,7 @@ public class AbstractSequencerCommand implements ICommand, ISequencer {
 
         while((i = in.read()) != -1) {
 
-           ESequencerResult result = push((byte) i);
+           ESequencerResult result = sequencer.push((byte) i);
 
            if(result != ESequencerResult.CONTINUE) {
                IContext messageContext = new DefaultContext(IContext.ECoreScope.MESSAGE, context);
@@ -49,40 +48,12 @@ public class AbstractSequencerCommand implements ICommand, ISequencer {
                        : onSeparatorChainFactory;
                chainFactory.newChain().run(source, target, messageContext, callingChain);
                in.clear();
-               resetSequencerComponents();
            }
 
         }
 
         in.reset();
         onUnhandledChainFactory.newChain().run(source, target, context, callingChain);
-
-    }
-
-
-    @Override
-    public ESequencerResult push(byte b) {
-
-        ESequencerResult result = ESequencerResult.STOP;
-        for (ISequencer sequencer : sequencerComponents.keySet()) {
-            if(sequencerComponents.get(sequencer) == ESequencerResult.CONTINUE) {
-                ESequencerResult componentResult = sequencer.push(b);
-                sequencerComponents.put(sequencer, sequencer.push(b));
-                if(componentResult.getPriority() > result.getPriority())
-                    result = componentResult;
-            }
-        }
-
-        return result;
-
-    }
-
-
-    protected void resetSequencerComponents() {
-
-        for (ISequencer sequencer : sequencerComponents.keySet()) {
-            sequencerComponents.put(sequencer, ESequencerResult.CONTINUE);
-        }
 
     }
 
@@ -99,15 +70,6 @@ public class AbstractSequencerCommand implements ICommand, ISequencer {
         this.onUnhandledChainFactory = onUnhandledChainFactory;
 
     }
-
-
-    public void addSequencerComponent(ISequencer sequencer) {
-
-        sequencerComponents.put(sequencer, ESequencerResult.CONTINUE);
-
-    }
-
-
 
 
 }

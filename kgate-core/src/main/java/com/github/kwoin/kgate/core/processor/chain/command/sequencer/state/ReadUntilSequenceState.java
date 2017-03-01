@@ -1,7 +1,8 @@
-package com.github.kwoin.kgate.core.processor.chain.command.sequencer.component.state;
+package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.component.StateMachineSequencerComponent;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -23,7 +24,7 @@ public class ReadUntilSequenceState extends AbstractState {
 
 
     public ReadUntilSequenceState(
-            StateMachineSequencerComponent stateMachine,
+            StateMachineSequencer stateMachine,
             byte[] successSequence,
             @Nullable byte[] stopSequence,
             @Nullable IStateCallback onSuccess,
