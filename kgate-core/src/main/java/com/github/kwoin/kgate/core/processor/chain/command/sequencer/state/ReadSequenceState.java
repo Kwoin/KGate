@@ -54,4 +54,12 @@ public class ReadSequenceState extends AbstractState {
 
     }
 
+
+    @Override
+    public void reset() {
+
+        sequenceCursor = 0;
+
+    }
+
 }

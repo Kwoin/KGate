@@ -62,6 +62,15 @@ public class ReadNConditionalState extends AbstractState {
     }
 
 
+    @Override
+    public void reset() {
+
+        baos.reset();
+        cursor = 0;
+
+    }
+
+
     public interface ICondition {
 
         boolean accept(byte b);

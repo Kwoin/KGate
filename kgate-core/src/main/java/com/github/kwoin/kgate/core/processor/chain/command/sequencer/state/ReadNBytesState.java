@@ -51,6 +51,12 @@ public class ReadNBytesState extends AbstractState {
     }
 
 
+    @Override
+    public void reset() {
 
+        baos.reset();
+        cursor = 0;
+
+    }
 
 }

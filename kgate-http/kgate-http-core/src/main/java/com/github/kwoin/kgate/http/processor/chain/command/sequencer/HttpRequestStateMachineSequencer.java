@@ -10,11 +10,7 @@ import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadM
 /**
  * @author P. WILLEMET
  */
-public class HttpRequestStateMachineSequencer extends StateMachineSequencer {
-
-
-    private boolean chunked;
-    private int contentLength;
+public class HttpRequestStateMachineSequencer extends AbstractHttpMessageStateMachineSequencer {
 
 
     public HttpRequestStateMachineSequencer() {
@@ -27,34 +23,8 @@ public class HttpRequestStateMachineSequencer extends StateMachineSequencer {
         initialAdd(new ReadUntilSequenceState(this, "\r\n".getBytes(), null, new NextStateCallback(), null));
         initialAdd(new ReadUntilSequenceState(this, "\r\n".getBytes(), null, ))
 
-
     }
 
 
-    public boolean isChunked() {
 
-        return chunked;
-
-    }
-
-
-    public void setChunked(boolean chunked) {
-
-        this.chunked = chunked;
-
-    }
-
-
-    public int getContentLength() {
-
-        return contentLength;
-
-    }
-
-
-    public void setContentLength(int contentLength) {
-
-        this.contentLength = contentLength;
-
-    }
 }

@@ -76,4 +76,15 @@ public class CompositeState extends AbstractState {
         return result;
 
     }
+
+
+    @Override
+    public void reset() {
+
+        baos.reset();
+        Collections.copy(copy, statesComponents);
+        for (AbstractState state : statesComponents)
+            state.reset();
+
+    }
 }

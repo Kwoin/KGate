@@ -62,4 +62,14 @@ public class ReadUntilSequenceState extends AbstractState {
         return ESequencerResult.CONTINUE;
 
     }
+
+
+    @Override
+    public void reset() {
+
+        baos.reset();
+        successSequenceCursor = 0;
+        stopSequenceCursor = 0;
+
+    }
 }
