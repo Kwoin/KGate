@@ -2,7 +2,7 @@ package com.github.kwoin.kgate.core.processor.chain;
 
 import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.AbstractSequencerCommand;
+import com.github.kwoin.kgate.core.processor.chain.command.AbstractSequencerCommand;
 
 import java.util.Arrays;
 import java.util.List;

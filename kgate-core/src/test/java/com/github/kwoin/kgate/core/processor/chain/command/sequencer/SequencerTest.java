@@ -9,6 +9,7 @@ import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.processor.chain.SequencerChain;
+import com.github.kwoin.kgate.core.processor.chain.command.AbstractSequencerCommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.processor.chain.command.SimpleLoggerCommand;

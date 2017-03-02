@@ -1,7 +1,8 @@
-package com.github.kwoin.kgate.core.processor.chain.command.sequencer.component.state;
+package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.component.StateMachineSequencerComponent;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
@@ -10,7 +11,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * @author P. WILLEMET
  */
-public class ReadBytesState extends AbstractState {
+public class ReadNBytesState extends AbstractState {
 
 
     private int nBytes;
@@ -19,12 +20,16 @@ public class ReadBytesState extends AbstractState {
     private ByteArrayOutputStream baos;
 
 
-    public ReadBytesState(
-            StateMachineSequencerComponent stateMachine,
+    public ReadNBytesState(
+            StateMachineSequencer stateMachine,
             int nBytes,
             @Nullable IStateCallback onNBytesRead) {
 
         super(stateMachine);
+
+        if(nBytes < 1)
+            throw new IllegalArgumentException("nBytes must be >= 1");
+
         this.nBytes = nBytes;
         cursor = 0;
         this.onNBytesRead = onNBytesRead;
