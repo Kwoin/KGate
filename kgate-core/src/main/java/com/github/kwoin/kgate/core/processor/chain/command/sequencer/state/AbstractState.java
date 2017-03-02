@@ -20,4 +20,7 @@ public abstract class AbstractState implements ISequencer {
     }
 
 
+    public abstract void reset();
+
+
 }

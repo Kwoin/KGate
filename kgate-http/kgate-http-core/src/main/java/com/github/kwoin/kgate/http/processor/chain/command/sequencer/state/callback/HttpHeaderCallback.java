@@ -2,7 +2,9 @@ package com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.call
 
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.AbstractState;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
+import com.github.kwoin.kgate.http.processor.chain.command.sequencer.AbstractHttpMessageStateMachineSequencer;
 
 
 /**
@@ -16,11 +18,17 @@ public class HttpHeaderCallback implements IStateCallback {
 
         String line = new String(dataRead);
         if(line.equals("\r\n")) {
-            stateMachine.a
+            AbstractState readBodyState = ((AbstractHttpMessageStateMachineSequencer)stateMachine).computeReadBodyState();
+            stateMachine.add(readBodyState);
+            stateMachine.next();
+            return ESequencerResult.CONTINUE;
         }
 
-        String header = line.substring(0, header.indexOf(':'));
-        if header.equals()
+        String header = line.substring(0, line.indexOf(':'));
+        if (header.equals("Content-Length")) {
+            String value = line.substring(line.indexOf(':') + 1, line.length() - 1).trim();
+            ((AbstractHttpMessageStateMachineSequencer)stateMachine).setContentLength(Integer.parseInt(value));
+        } else if(header.equals("Transfer-Encoding"))
 
     }
 }
