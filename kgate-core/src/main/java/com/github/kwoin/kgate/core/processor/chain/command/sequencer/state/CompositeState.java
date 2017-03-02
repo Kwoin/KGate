@@ -1,6 +1,5 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
@@ -48,32 +47,28 @@ public class CompositeState extends AbstractState {
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public int push(byte b) {
 
         baos.write(b);
 
-        ESequencerResult result = ESequencerResult.STOP;
-        ESequencerResult stateResult;
-        AbstractState state;
-        for (int i = statesComponents.size(); i >= 0; i--) {
+        int result;
+        for (int i = copy.size(); i >= 0; i--) {
 
-            state = statesComponents.get(i);
-            stateResult = state.push(b);
+            result = copy.get(i).push(b);
 
-            if(result == ESequencerResult.STOP);
-            statesComponents.remove(i);
-
-            if(stateResult.getPriority() > result.getPriority())
-                result = stateResult;
+            if(result == stateMachine.STOP)
+                copy.remove(i);
+            else if(result == stateMachine.CUT)
+                return onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : result;
+            else if(result != stateMachine.getCurrentStateIndex())
+                return result;
 
         }
 
-        if(result == ESequencerResult.CUT)
-            result = onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : result;
-        else if(result == ESequencerResult.STOP)
-            result = onFail != null ? onFail.run(baos.toByteArray(), stateMachine) : ESequencerResult.STOP;
+        if(copy.size() == 0)
+            return onFail != null ? onFail.run(baos.toByteArray(), stateMachine) : stateMachine.STOP;
 
-        return result;
+        return stateMachine.getCurrentStateIndex();
 
     }
 

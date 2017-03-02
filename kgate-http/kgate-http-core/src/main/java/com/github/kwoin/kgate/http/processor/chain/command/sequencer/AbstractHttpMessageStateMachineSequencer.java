@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 public class AbstractHttpMessageStateMachineSequencer extends StateMachineSequencer {
 
 
+
     private boolean chunked;
     private int contentLength;
 

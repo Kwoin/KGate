@@ -1,6 +1,5 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
@@ -45,19 +44,19 @@ public class ReadNConditionalState extends AbstractState {
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public int push(byte b) {
 
         baos.write(b);
 
         if(condition.accept(b))
             cursor++;
         else
-            return onFail != null ? onFail.run(baos.toByteArray(), stateMachine) : ESequencerResult.STOP;
+            return onFail != null ? onFail.run(baos.toByteArray(), stateMachine) : stateMachine.STOP;
 
         if(cursor == nBytes)
-            return onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : ESequencerResult.CUT;
+            return onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : stateMachine.CUT;
 
-        return ESequencerResult.CONTINUE;
+        return stateMachine.getCurrentStateIndex();
 
     }
 

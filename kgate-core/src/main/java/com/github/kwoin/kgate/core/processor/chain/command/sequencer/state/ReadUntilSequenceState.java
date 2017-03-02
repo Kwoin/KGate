@@ -1,6 +1,5 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
@@ -43,7 +42,7 @@ public class ReadUntilSequenceState extends AbstractState {
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public int push(byte b) {
 
         baos.write(b);
 
@@ -54,12 +53,12 @@ public class ReadUntilSequenceState extends AbstractState {
             stopSequenceCursor++;
 
         if(successSequenceCursor == successSequence.length)
-            return onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : ESequencerResult.CUT;
+            return onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : stateMachine.CUT;
 
         if(stopSequence != null && stopSequenceCursor == stopSequence.length)
-            return onStop != null ? onStop.run(baos.toByteArray(), stateMachine) : ESequencerResult.STOP;
+            return onStop != null ? onStop.run(baos.toByteArray(), stateMachine) : stateMachine.STOP;
 
-        return ESequencerResult.CONTINUE;
+        return stateMachine.getCurrentStateIndex();
 
     }
 

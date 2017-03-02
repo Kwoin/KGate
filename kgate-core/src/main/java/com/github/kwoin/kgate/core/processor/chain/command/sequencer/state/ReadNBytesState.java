@@ -1,6 +1,5 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
@@ -39,14 +38,14 @@ public class ReadNBytesState extends AbstractState {
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public int push(byte b) {
 
         baos.write(b);
 
         if(++cursor == nBytes)
-            return onNBytesRead != null ? onNBytesRead.run(baos.toByteArray(), stateMachine) : ESequencerResult.CUT;
+            return onNBytesRead != null ? onNBytesRead.run(baos.toByteArray(), stateMachine) : stateMachine.CUT;
 
-        return ESequencerResult.CONTINUE;
+        return stateMachine.getCurrentStateIndex();
 
     }
 
