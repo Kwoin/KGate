@@ -6,17 +6,17 @@ import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.Abstr
 /**
  * @author P. WILLEMET
  */
-public class StateMachineSequencer implements IStateMachineSequencer {
+public abstract class StateMachineSequencer implements ISequencer, IStateMachine {
 
 
     protected AbstractState[] states;
     protected int currentStateIndex;
 
 
-    public StateMachineSequencer(AbstractState[] states) {
+    public StateMachineSequencer() {
 
-        this.states = states;
         currentStateIndex = 0;
+        states = initializeStates();
 
     }
 
@@ -27,8 +27,10 @@ public class StateMachineSequencer implements IStateMachineSequencer {
         currentStateIndex = states[currentStateIndex].push(b);
         switch(currentStateIndex) {
             case CUT:
+                reset();
                 return ESequencerResult.CUT;
             case STOP:
+                reset();
                 return ESequencerResult.STOP;
             default:
                 return ESequencerResult.CONTINUE;
@@ -54,4 +56,16 @@ public class StateMachineSequencer implements IStateMachineSequencer {
         return currentStateIndex;
 
     }
+
+
+    @Override
+    public void setCurrentStateIndex(int currentStateIndex) {
+
+        this.currentStateIndex = currentStateIndex;
+
+    }
+
+
+    public abstract AbstractState[] initializeStates();
+
 }

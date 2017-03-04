@@ -1,6 +1,8 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
+
+import java.io.ByteArrayOutputStream;
 
 
 /**
@@ -9,19 +11,39 @@ import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachi
 public abstract class AbstractState {
 
 
-    protected IStateMachineSequencer stateMachine;
+    protected IStateMachine stateMachine;
+    private ByteArrayOutputStream baos;
 
 
-    public AbstractState(IStateMachineSequencer stateMachine) {
+    public AbstractState(IStateMachine stateMachine) {
 
         this.stateMachine = stateMachine;
+        baos = new ByteArrayOutputStream();
 
     }
 
 
     public abstract int push(byte b);
 
-    public abstract void reset();
+
+    protected void bufferize(byte b) {
+
+        baos.write(b);
+
+    }
+
+    protected byte[] getBuffer() {
+
+        return baos.toByteArray();
+
+    }
+
+
+    public void reset() {
+
+        baos.reset();
+
+    }
 
 
 }

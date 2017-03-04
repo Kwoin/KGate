@@ -1,10 +1,9 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
 import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
 
 
 /**
@@ -16,13 +15,14 @@ public class ReadNBytesState extends AbstractState {
     private int nBytes;
     private int cursor;
     private IStateCallback onNBytesRead;
-    private ByteArrayOutputStream baos;
+    private boolean bufferize;
 
 
     public ReadNBytesState(
-            StateMachineSequencer stateMachine,
+            IStateMachine stateMachine,
             int nBytes,
-            @Nullable IStateCallback onNBytesRead) {
+            @Nullable IStateCallback onNBytesRead,
+            boolean bufferize) {
 
         super(stateMachine);
 
@@ -32,7 +32,21 @@ public class ReadNBytesState extends AbstractState {
         this.nBytes = nBytes;
         cursor = 0;
         this.onNBytesRead = onNBytesRead;
-        baos = new ByteArrayOutputStream();
+        this.bufferize = bufferize;
+
+    }
+
+
+    public int getNBytes() {
+
+        return nBytes;
+
+    }
+
+
+    public void setNBytes(int nBytes) {
+
+        this.nBytes = nBytes;
 
     }
 
@@ -40,10 +54,11 @@ public class ReadNBytesState extends AbstractState {
     @Override
     public int push(byte b) {
 
-        baos.write(b);
+        if (bufferize)
+            bufferize(b);
 
         if(++cursor == nBytes)
-            return onNBytesRead != null ? onNBytesRead.run(baos.toByteArray(), stateMachine) : stateMachine.CUT;
+            return onNBytesRead != null ? onNBytesRead.run(getBuffer(), stateMachine, this) : stateMachine.CUT;
 
         return stateMachine.getCurrentStateIndex();
 
@@ -53,7 +68,8 @@ public class ReadNBytesState extends AbstractState {
     @Override
     public void reset() {
 
-        baos.reset();
+        super.reset();
+
         cursor = 0;
 
     }

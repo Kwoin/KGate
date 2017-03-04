@@ -6,7 +6,10 @@ package com.github.kwoin.kgate.core.context;
 public enum EDirection {
 
 
-    REQUEST, RESPONSE
+    REQUEST, RESPONSE;
+
+
+    public static String DIRECTION_FIELD = "direction";
 
 
 }

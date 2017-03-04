@@ -1,6 +1,7 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.AbstractState;
 
 
 /**
@@ -8,6 +9,6 @@ import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachi
  */
 public interface IStateCallback {
 
-    int run(byte[] dataRead, IStateMachineSequencer stateMachineSequencer);
+    int run(byte[] dataRead, IStateMachine stateMachine, AbstractState callingState);
 
 }

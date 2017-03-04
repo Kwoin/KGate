@@ -1,6 +1,6 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ public class ReadSequenceState extends AbstractState {
 
 
     public ReadSequenceState(
-            StateMachineSequencer stateMachine,
+            IStateMachine stateMachine,
             byte[] sequence,
             @Nullable IStateCallback onSuccess,
             @Nullable IStateCallback onFail) {
@@ -42,12 +42,12 @@ public class ReadSequenceState extends AbstractState {
             byte[] dataRead = new byte[sequenceCursor + 1];
             System.arraycopy(sequence, 0, dataRead, 0, sequenceCursor);
             dataRead[dataRead.length - 1] = b;
-            onFail.run(dataRead, stateMachine);
+            onFail.run(dataRead, stateMachine, this);
         } else
             return stateMachine.STOP;
 
         if(sequenceCursor == sequence.length)
-            return onSuccess != null ? onSuccess.run(sequence, stateMachine) : stateMachine.CUT;
+            return onSuccess != null ? onSuccess.run(sequence, stateMachine, this) : stateMachine.CUT;
 
         return stateMachine.getCurrentStateIndex();
 

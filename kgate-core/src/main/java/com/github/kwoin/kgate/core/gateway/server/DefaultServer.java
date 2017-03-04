@@ -166,7 +166,7 @@ public class DefaultServer implements IServer {
                     KGateSocket kgateSocketClient = new KGateSocket(new Socket(host, port));
 
                     IContext sessionContext = new DefaultContext(IContext.ECoreScope.SESSION, context);
-                    sessionContext.setVariable(IContext.ECoreScope.SESSION, "direction", EDirection.REQUEST);
+                    sessionContext.setVariable(IContext.ECoreScope.SESSION, EDirection.DIRECTION_FIELD, EDirection.REQUEST);
 
                     IProcessor processor = processorFactory.newProcessor();
                     processor.setSourceToTargetChainFactory(sourceToTargetChainFactory);
