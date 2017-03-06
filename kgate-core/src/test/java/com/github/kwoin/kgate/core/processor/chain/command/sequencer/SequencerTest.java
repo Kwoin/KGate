@@ -85,29 +85,50 @@ public class SequencerTest {
 
         public MockSequencer() {
 
-            super(new ISequencer() {
+            super(new ISequencerFactory() {
                 @Override
-                public ESequencerResult push(byte b) {
+                public ISequencer newSequencer(IContext context) {
+                    return new ISequencer() {
+                        @Override
+                        public ESequencerResult push(byte b) {
 
-                    switch(b) {
-                        case '|':
-                            return ESequencerResult.CUT;
-                        case '@':
-                            return ESequencerResult.STOP;
-                        default:
-                            return ESequencerResult.CONTINUE;
-                    }
+                            switch(b) {
+                                case '|':
+                                    return ESequencerResult.CUT;
+                                case '@':
+                                    return ESequencerResult.STOP;
+                                default:
+                                    return ESequencerResult.CONTINUE;
+                            }
+
+                        }
+
+
+                        @Override
+                        public void reset() {
+
+                        }
+                    };
 
                 }
 
-
-                @Override
-                public void reset() {
-
-                }
-            });
-
-            onUnhandledChainFactory = new IChainFactory() {
+            }, new IChainFactory() {
+                        @Override
+                        public IChain newChain() {
+                            IChain chain = new DefaultChain();
+                            chain.setCommandListFactory(new ICommandListFactory() {
+                                @Override
+                                public List<ICommand> newCommandList() {
+                                    return Arrays.asList(
+                                            new SimpleLoggerCommand(),
+                                            new SimpleSaveInContextCommand(IContext.ECoreScope.APPLICATION, "test.separator"),
+                                            new SimpleRelayerCommand()
+                                    );
+                                }
+                            });
+                            return chain;
+                        }
+             }, new IChainFactory() {
                 @Override
                 public IChain newChain() {
                     IChain chain = new DefaultChain();
@@ -123,25 +144,7 @@ public class SequencerTest {
                     });
                     return chain;
                 }
-            };
-
-            onSeparatorChainFactory = new IChainFactory() {
-                @Override
-                public IChain newChain() {
-                    IChain chain = new DefaultChain();
-                    chain.setCommandListFactory(new ICommandListFactory() {
-                        @Override
-                        public List<ICommand> newCommandList() {
-                            return Arrays.asList(
-                                    new SimpleLoggerCommand(),
-                                    new SimpleSaveInContextCommand(IContext.ECoreScope.APPLICATION, "test.separator"),
-                                    new SimpleRelayerCommand()
-                            );
-                        }
-                    });
-                    return chain;
-                }
-            };
+            });
 
 
         }

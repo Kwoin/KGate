@@ -64,6 +64,7 @@ public class ReadUntilSequenceConditionalState extends AbstractState {
     public void reset() {
 
         super.reset();
+        sequenceCursor = 0;
 
     }
 }
