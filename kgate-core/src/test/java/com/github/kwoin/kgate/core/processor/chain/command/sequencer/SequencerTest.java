@@ -85,7 +85,27 @@ public class SequencerTest {
 
         public MockSequencer() {
 
-            super();
+            super(new ISequencer() {
+                @Override
+                public ESequencerResult push(byte b) {
+
+                    switch(b) {
+                        case '|':
+                            return ESequencerResult.CUT;
+                        case '@':
+                            return ESequencerResult.STOP;
+                        default:
+                            return ESequencerResult.CONTINUE;
+                    }
+
+                }
+
+
+                @Override
+                public void reset() {
+
+                }
+            });
 
             onUnhandledChainFactory = new IChainFactory() {
                 @Override
@@ -123,20 +143,6 @@ public class SequencerTest {
                 }
             };
 
-            addSequencerComponent(new ISequencer() {
-                @Override
-                public ESequencerResult push(byte b) {
-                    switch(b) {
-                        case '|':
-                            return ESequencerResult.CUT;
-                        case '@':
-                            return ESequencerResult.STOP;
-                        default:
-                            return ESequencerResult.CONTINUE;
-                    }
-
-                }
-            });
 
         }
 

@@ -1,26 +1,49 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ISequencer;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
+
+import java.io.ByteArrayOutputStream;
 
 
 /**
  * @author P. WILLEMET
  */
-public abstract class AbstractState implements ISequencer {
+public abstract class AbstractState {
 
 
-    protected StateMachineSequencer stateMachine;
+    protected IStateMachine stateMachine;
+    private ByteArrayOutputStream baos;
 
 
-    public AbstractState(StateMachineSequencer stateMachine) {
+    public AbstractState(IStateMachine stateMachine) {
 
         this.stateMachine = stateMachine;
+        baos = new ByteArrayOutputStream();
 
     }
 
 
-    public abstract void reset();
+    public abstract int push(byte b);
+
+
+    protected void bufferize(byte b) {
+
+        baos.write(b);
+
+    }
+
+    protected byte[] getBuffer() {
+
+        return baos.toByteArray();
+
+    }
+
+
+    public void reset() {
+
+        baos.reset();
+
+    }
 
 
 }

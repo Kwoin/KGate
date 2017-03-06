@@ -1,17 +1,16 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.condition.ICondition;
 
 import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
 
 
 /**
  * @author P. WILLEMET
  */
-public class ReadNConditionalState extends AbstractState {
+public class ReadNBytesConditionalState extends AbstractState {
 
 
     private ICondition condition;
@@ -19,15 +18,16 @@ public class ReadNConditionalState extends AbstractState {
     private int cursor;
     private IStateCallback onSuccess;
     private IStateCallback onFail;
-    private ByteArrayOutputStream baos;
+    private boolean bufferize;
 
 
-    public ReadNConditionalState(
-            StateMachineSequencer stateMachine,
+    public ReadNBytesConditionalState(
+            IStateMachine stateMachine,
             ICondition condition,
             int nBytes,
             @Nullable IStateCallback onSuccess,
-            @Nullable IStateCallback onFail) {
+            @Nullable IStateCallback onFail,
+            boolean bufferize) {
 
         super(stateMachine);
 
@@ -39,25 +39,27 @@ public class ReadNConditionalState extends AbstractState {
         cursor = 0;
         this.onSuccess = onSuccess;
         this.onFail = onFail;
-        baos = new ByteArrayOutputStream();
+        this.bufferize = bufferize;
+
 
     }
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public int push(byte b) {
 
-        baos.write(b);
+        if (bufferize)
+            bufferize(b);
 
         if(condition.accept(b))
             cursor++;
         else
-            return onFail != null ? onFail.run(baos.toByteArray(), stateMachine) : ESequencerResult.STOP;
+            return onFail != null ? onFail.run(getBuffer(), stateMachine, this) : stateMachine.STOP;
 
         if(cursor == nBytes)
-            return onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : ESequencerResult.CUT;
+            return onSuccess != null ? onSuccess.run(getBuffer(), stateMachine, this) : stateMachine.CUT;
 
-        return ESequencerResult.CONTINUE;
+        return stateMachine.getCurrentStateIndex();
 
     }
 
@@ -65,15 +67,9 @@ public class ReadNConditionalState extends AbstractState {
     @Override
     public void reset() {
 
-        baos.reset();
+        super.reset();
+
         cursor = 0;
-
-    }
-
-
-    public interface ICondition {
-
-        boolean accept(byte b);
 
     }
 

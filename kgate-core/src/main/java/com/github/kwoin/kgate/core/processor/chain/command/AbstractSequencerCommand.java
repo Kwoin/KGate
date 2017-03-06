@@ -18,14 +18,16 @@ import java.io.IOException;
 public class AbstractSequencerCommand implements ICommand {
 
 
-    protected ISequencer sequencer;
+    protected ISequencerFactory sequencerFactory;
     protected IChainFactory onSeparatorChainFactory;
     protected IChainFactory onUnhandledChainFactory;
 
 
-    public AbstractSequencerCommand(ISequencer sequencer) {
+    public AbstractSequencerCommand(ISequencerFactory sequencerFactory, IChainFactory onSeparatorChainFactory, IChainFactory onUnhandledChainFactory) {
 
-        this.sequencer = sequencer;
+        this.sequencerFactory = sequencerFactory;
+        this.onSeparatorChainFactory = onSeparatorChainFactory;
+        this.onUnhandledChainFactory = onUnhandledChainFactory;
 
     }
 
@@ -33,6 +35,7 @@ public class AbstractSequencerCommand implements ICommand {
     @Override
     public void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException {
 
+        ISequencer sequencer = sequencerFactory.newSequencer(context);
         KGateInputStream in = ((KGateInputStream) source.getInputStream());
         int i;
 
@@ -68,6 +71,15 @@ public class AbstractSequencerCommand implements ICommand {
     public void setOnUnhandledChainFactory(IChainFactory onUnhandledChainFactory) {
 
         this.onUnhandledChainFactory = onUnhandledChainFactory;
+
+    }
+
+
+    public interface ISequencerFactory {
+
+
+        ISequencer newSequencer(IContext context);
+
 
     }
 

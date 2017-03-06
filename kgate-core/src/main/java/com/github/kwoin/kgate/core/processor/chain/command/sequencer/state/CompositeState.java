@@ -1,13 +1,10 @@
 package com.github.kwoin.kgate.core.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
 import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.IStateCallback;
 
 import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -21,19 +18,24 @@ public class CompositeState extends AbstractState {
     private List<AbstractState> copy;
     private IStateCallback onSuccess;
     private IStateCallback onFail;
-    private ByteArrayOutputStream baos;
+    private boolean bufferize;
+    private boolean resetOnSwitchingState;
 
 
     public CompositeState(
-            StateMachineSequencer stateMachine,
+            IStateMachine stateMachine,
             @Nullable IStateCallback onSuccess,
-            @Nullable IStateCallback onFail) {
+            @Nullable IStateCallback onFail,
+            boolean bufferize,
+            boolean resetOnSwitchingState) {
 
         super(stateMachine);
         statesComponents = new ArrayList<>();
+        copy = new ArrayList<>();
         this.onSuccess = onSuccess;
         this.onFail = onFail;
-        baos = new ByteArrayOutputStream();
+        this.bufferize = bufferize;
+        this.resetOnSwitchingState = resetOnSwitchingState;
 
     }
 
@@ -41,39 +43,39 @@ public class CompositeState extends AbstractState {
     public CompositeState addComponentState(AbstractState componentState) {
 
         statesComponents.add(componentState);
-        Collections.copy(copy, statesComponents);
+        copy.add(componentState);
         return this;
 
     }
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public int push(byte b) {
 
-        baos.write(b);
+        if(bufferize)
+            bufferize(b);
 
-        ESequencerResult result = ESequencerResult.STOP;
-        ESequencerResult stateResult;
-        AbstractState state;
-        for (int i = statesComponents.size(); i >= 0; i--) {
+        int result;
+        for (int i = copy.size() - 1; i >= 0; i--) {
 
-            state = statesComponents.get(i);
-            stateResult = state.push(b);
+            result = copy.get(i).push(b);
 
-            if(result == ESequencerResult.STOP);
-            statesComponents.remove(i);
-
-            if(stateResult.getPriority() > result.getPriority())
-                result = stateResult;
+            if(result == stateMachine.STOP)
+                copy.remove(i);
+            else if(result == stateMachine.CUT)
+                return onSuccess != null ? onSuccess.run(getBuffer(), stateMachine, this) : result;
+            else if(result != stateMachine.getCurrentStateIndex()) {
+                if(resetOnSwitchingState)
+                    reset();
+                return result;
+            }
 
         }
 
-        if(result == ESequencerResult.CUT)
-            result = onSuccess != null ? onSuccess.run(baos.toByteArray(), stateMachine) : result;
-        else if(result == ESequencerResult.STOP)
-            result = onFail != null ? onFail.run(baos.toByteArray(), stateMachine) : ESequencerResult.STOP;
+        if(copy.size() == 0)
+            return onFail != null ? onFail.run(getBuffer(), stateMachine, this) : stateMachine.STOP;
 
-        return result;
+        return stateMachine.getCurrentStateIndex();
 
     }
 
@@ -81,8 +83,11 @@ public class CompositeState extends AbstractState {
     @Override
     public void reset() {
 
-        baos.reset();
-        Collections.copy(copy, statesComponents);
+        super.reset();
+
+
+        copy.clear();
+        copy.addAll(statesComponents);
         for (AbstractState state : statesComponents)
             state.reset();
 

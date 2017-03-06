@@ -19,6 +19,7 @@ public class CompositeSequencer implements ISequencer {
     public CompositeSequencer() {
 
         sequencersComponents = new ArrayList<>();
+        copy = new ArrayList<>();
 
     }
 
@@ -58,6 +59,14 @@ public class CompositeSequencer implements ISequencer {
             Collections.copy(copy, sequencersComponents);
 
         return result;
+
+    }
+
+
+    @Override
+    public void reset() {
+
+        Collections.copy(copy, sequencersComponents);
 
     }
 }
