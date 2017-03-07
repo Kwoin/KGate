@@ -55,7 +55,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMonoContentLengthMessage() throws IOException {
 
-        KGateInputStream resource = getResource("normalHttpMessage");
+        KGateInputStream resource = getResource("normalHttpMessage.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
@@ -69,7 +69,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMonoChunkedMessage() throws IOException {
 
-        KGateInputStream resource = getResource("chunkedHttpMessage");
+        KGateInputStream resource = getResource("chunkedHttpMessage.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
@@ -83,7 +83,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMonoNoBodyResponse() throws IOException {
 
-        KGateInputStream resource = getResource("204HttpResponse");
+        KGateInputStream resource = getResource("204HttpResponse.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
@@ -97,7 +97,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMultipleHttpMessages() throws IOException {
 
-        KGateInputStream resource = getResource("multipleHttpMessages");
+        KGateInputStream resource = getResource("multipleHttpMessages.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
