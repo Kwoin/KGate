@@ -7,7 +7,7 @@ public enum ESequencerResult {
 
     STOP(0),
     CONTINUE(1),
-    CUT(2);
+    CUT(3);
 
 
     private int priority;

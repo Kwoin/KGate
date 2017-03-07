@@ -5,8 +5,6 @@ import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
 import com.github.kwoin.kgate.core.gateway.server.IServer;
-import com.github.kwoin.kgate.core.processor.IProcessorFactory;
-import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +23,15 @@ public class DefaultGateway implements IGateway {
 
     public DefaultGateway() {
 
+        this(new DefaultServer());
+
+    }
+
+
+    public DefaultGateway(IServer server) {
+
+        this.server = server;
         started = false;
-        server = new DefaultServer();
         context = new DefaultContext(IContext.ECoreScope.APPLICATION);
 
     }
@@ -51,8 +56,12 @@ public class DefaultGateway implements IGateway {
     @Override
     public void start() throws KGateServerException {
 
+        logger.debug("Starting Gateway (" + this + ") ...");
+
         server.start(context);
         started = true;
+
+        logger.debug("Gateway (" + this + ") STARTED");
 
     }
 
@@ -60,33 +69,24 @@ public class DefaultGateway implements IGateway {
     @Override
     public void stop() throws KGateServerException {
 
+        logger.debug("Stopping Gateway...");
+
         server.stop();
         server = null;
         started = false;
 
-    }
-
-
-    @Override
-    public void setProcessorFactory(IProcessorFactory processorFactory) {
-
-        server.setProcessorFactory(processorFactory);
+        logger.debug("Gateway STOPPED");
 
     }
 
 
     @Override
-    public void setSourceToTargetChainFactory(IChainFactory sourceToTargetChainFactory) {
+    public void setServer(IServer server) {
 
-        server.setSourceToTargetChainFactory(sourceToTargetChainFactory);
-
-    }
-
-
-    @Override
-    public void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory) {
-
-        server.setTargetToSourceChainFactory(targetToSourceChainFactory);
+        if(started)
+            logger.warn("Cannot reset server while running");
+        else
+            this.server = server;
 
     }
 

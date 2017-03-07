@@ -2,8 +2,7 @@ package com.github.kwoin.kgate.core.processor;
 
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
-
-import java.net.Socket;
+import com.github.kwoin.kgate.core.socket.KGateSocket;
 
 
 /**
@@ -15,6 +14,6 @@ public interface IProcessor {
 
     void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory);
 
-    void process(Socket source, Socket client, IContext context);
+    void process(KGateSocket source, KGateSocket client, IContext context);
 
 }
