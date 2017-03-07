@@ -4,6 +4,7 @@ import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
+import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,19 +25,26 @@ public class DefaultProcessor implements IProcessor {
 
     public DefaultProcessor() {
 
-        sourceToTargetChainFactory = new IChainFactory() {
-            @Override
-            public IChain newChain() {
+        this(new IChainFactory() {
+                @Override
+                public IChain newChain() {
                 return new DefaultChain();
             }
-        };
+            },
+            new IChainFactory() {
+                @Override
+                public IChain newChain() {
+                return new DefaultChain();
+            }
+            });
 
-        targetToSourceChainFactory = new IChainFactory() {
-            @Override
-            public IChain newChain() {
-                return new DefaultChain();
-            }
-        };
+    }
+
+
+    public DefaultProcessor(IChainFactory sourceToTargetChainFactory, IChainFactory targetToSourceChainFactory) {
+
+        this.sourceToTargetChainFactory = sourceToTargetChainFactory;
+        this.targetToSourceChainFactory = targetToSourceChainFactory;
 
     }
 
@@ -58,7 +66,7 @@ public class DefaultProcessor implements IProcessor {
 
 
     @Override
-    public void process(Socket source, Socket client, IContext context) {
+    public void process(KGateSocket source, KGateSocket client, IContext context) {
 
         logger.trace("process start");
 
