@@ -8,9 +8,6 @@ import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.processor.DefaultProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessorFactory;
-import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
-import com.github.kwoin.kgate.core.processor.chain.IChain;
-import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,41 +31,33 @@ public class DefaultServer implements IServer {
 
     protected ServerSocket serverSocket;
     protected IProcessorFactory processorFactory;
-    protected IChainFactory sourceToTargetChainFactory;
-    protected IChainFactory targetToSourceChainFactory;
     protected ExecutorService threadPool;
     protected boolean isStopped;
 
 
     public DefaultServer() {
 
-        processorFactory = new IProcessorFactory() {
+        this(new IProcessorFactory() {
             @Override
             public IProcessor newProcessor() {
                 return new DefaultProcessor();
             }
-        };
+        });
 
-        sourceToTargetChainFactory = new IChainFactory() {
-            @Override
-            public IChain newChain() {
-                return new DefaultChain();
-            }
-        };
+    }
 
-        targetToSourceChainFactory = new IChainFactory() {
-            @Override
-            public IChain newChain() {
-                return new DefaultChain();
-            }
-        };
 
+    public DefaultServer(IProcessorFactory processorFactory) {
+
+        this.processorFactory = processorFactory;
 
     }
 
 
     @Override
     public void start(IContext context) throws KGateServerException {
+
+        logger.debug("Starting Server (" + this + ") ...");
 
         if(processorFactory == null)
             throw new KGateServerException(new NullPointerException("processorFactory not set"));
@@ -104,12 +93,16 @@ public class DefaultServer implements IServer {
 
         t.start();
 
+        logger.debug("Server (" + this + ") STARTED");
+
 
     }
 
 
     @Override
     public void stop() throws KGateServerException {
+
+        logger.debug("Stopping Server...");
 
         isStopped = true;
         try {
@@ -119,6 +112,8 @@ public class DefaultServer implements IServer {
             logger.error("Error on closing server", e);
         }
 
+        logger.debug("Server STOPPED");
+
     }
 
 
@@ -126,22 +121,6 @@ public class DefaultServer implements IServer {
     public void setProcessorFactory(IProcessorFactory processorFactory) {
 
         this.processorFactory = processorFactory;
-
-    }
-
-
-    @Override
-    public void setSourceToTargetChainFactory(IChainFactory sourceToTargetChainFactory) {
-
-        this.sourceToTargetChainFactory = sourceToTargetChainFactory;
-
-    }
-
-
-    @Override
-    public void setTargetToSourceChainFactory(IChainFactory targetToSourceChainFactory) {
-
-        this.targetToSourceChainFactory = targetToSourceChainFactory;
 
     }
 
@@ -169,8 +148,6 @@ public class DefaultServer implements IServer {
                     sessionContext.setVariable(IContext.ECoreScope.SESSION, EDirection.DIRECTION_FIELD, EDirection.REQUEST);
 
                     IProcessor processor = processorFactory.newProcessor();
-                    processor.setSourceToTargetChainFactory(sourceToTargetChainFactory);
-                    processor.setTargetToSourceChainFactory(targetToSourceChainFactory);
                     processor.process(kgateSocketSource, kgateSocketClient, sessionContext);
 
                 } catch (IOException|NoSuchElementException e) {

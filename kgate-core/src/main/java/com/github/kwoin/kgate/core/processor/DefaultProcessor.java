@@ -25,19 +25,26 @@ public class DefaultProcessor implements IProcessor {
 
     public DefaultProcessor() {
 
-        sourceToTargetChainFactory = new IChainFactory() {
-            @Override
-            public IChain newChain() {
+        this(new IChainFactory() {
+                @Override
+                public IChain newChain() {
                 return new DefaultChain();
             }
-        };
+            },
+            new IChainFactory() {
+                @Override
+                public IChain newChain() {
+                return new DefaultChain();
+            }
+            });
 
-        targetToSourceChainFactory = new IChainFactory() {
-            @Override
-            public IChain newChain() {
-                return new DefaultChain();
-            }
-        };
+    }
+
+
+    public DefaultProcessor(IChainFactory sourceToTargetChainFactory, IChainFactory targetToSourceChainFactory) {
+
+        this.sourceToTargetChainFactory = sourceToTargetChainFactory;
+        this.targetToSourceChainFactory = targetToSourceChainFactory;
 
     }
 

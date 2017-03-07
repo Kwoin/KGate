@@ -24,13 +24,20 @@ public class DefaultChain implements IChain {
 
     public DefaultChain() {
 
-        interrupt = false;
-        commandListFactory = new ICommandListFactory() {
+        this(new ICommandListFactory() {
             @Override
             public List<ICommand> newCommandList() {
                 return Arrays.asList(new SimpleRelayerCommand());
             }
-        };
+        });
+
+    }
+
+
+    public DefaultChain(ICommandListFactory commandListFactory) {
+
+        this.commandListFactory = commandListFactory;
+        interrupt = false;
 
     }
 

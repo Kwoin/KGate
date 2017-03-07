@@ -5,11 +5,15 @@ import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
 import com.github.kwoin.kgate.core.gateway.IGateway;
+import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
+import com.github.kwoin.kgate.core.processor.DefaultProcessor;
+import com.github.kwoin.kgate.core.processor.IProcessor;
+import com.github.kwoin.kgate.core.processor.IProcessorFactory;
 import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.processor.chain.SequencerChain;
-import com.github.kwoin.kgate.core.processor.chain.command.AbstractSequencerCommand;
+import com.github.kwoin.kgate.core.processor.chain.command.SequencerCommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.processor.chain.command.SimpleLoggerCommand;
@@ -34,13 +38,26 @@ public class SequencerTest {
     @Test
     public void testSequencer() throws IOException, KGateServerException, InterruptedException {
 
-        IGateway gateway = new DefaultGateway();
-        gateway.setSourceToTargetChainFactory(new IChainFactory() {
+        IGateway gateway = new DefaultGateway(new DefaultServer(new IProcessorFactory() {
             @Override
-            public IChain newChain() {
-                return new SequencerChain(new MockSequencer());
+            public IProcessor newProcessor() {
+                return new DefaultProcessor(
+                        new IChainFactory() {
+                            @Override
+                            public IChain newChain() {
+                                return new SequencerChain(new MockSequencer());
+                            }
+                        },
+                        new IChainFactory() {
+                            @Override
+                            public IChain newChain() {
+                                return new DefaultChain();
+                            }
+                        }
+                );
             }
-        });
+        }));
+
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
         server.setSoTimeout(1000);
 
@@ -80,7 +97,7 @@ public class SequencerTest {
     }
 
 
-    public class MockSequencer extends AbstractSequencerCommand {
+    public class MockSequencer extends SequencerCommand {
 
 
         public MockSequencer() {

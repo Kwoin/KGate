@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * @author P. WILLEMET
  */
-public class AbstractSequencerCommand implements ICommand {
+public class SequencerCommand implements ICommand {
 
 
     protected ISequencerFactory sequencerFactory;
@@ -23,7 +23,7 @@ public class AbstractSequencerCommand implements ICommand {
     protected IChainFactory onUnhandledChainFactory;
 
 
-    public AbstractSequencerCommand(ISequencerFactory sequencerFactory, IChainFactory onSeparatorChainFactory, IChainFactory onUnhandledChainFactory) {
+    public SequencerCommand(ISequencerFactory sequencerFactory, IChainFactory onSeparatorChainFactory, IChainFactory onUnhandledChainFactory) {
 
         this.sequencerFactory = sequencerFactory;
         this.onSeparatorChainFactory = onSeparatorChainFactory;
