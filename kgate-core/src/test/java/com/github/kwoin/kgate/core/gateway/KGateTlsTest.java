@@ -17,11 +17,20 @@ import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,10 +39,25 @@ import java.util.List;
 /**
  * @author P. WILLEMET
  */
-public class KGateTest {
+public class KGateTlsTest {
 
 
     private static boolean success;
+
+
+    @BeforeClass
+    public static void beforeClass() {
+
+        System.setProperty("javax.net.debug", "all");
+        KGateConfig.getConfig().setProperty("kgate.core.security.tlsEnabled", "true");
+        System.setProperty("javax.net.ssl.keyStore", KGateConfig.getConfig().getString("kgate.core.security.keystore.path"));
+        System.setProperty("javax.net.ssl.keyStorePassword", KGateConfig.getConfig().getString("kgate.core.security.keystore.password"));
+        if(!KGateConfig.getConfig().getString("kgate.core.security.truststore.path").isEmpty())
+            System.setProperty("javax.net.ssl.trustStore", KGateConfig.getConfig().getString("kgate.core.security.truststore.path"));
+        if(!KGateConfig.getConfig().getString("kgate.core.security.truststore.password").isEmpty())
+            System.setProperty("javax.net.ssl.trustStore", KGateConfig.getConfig().getString("kgate.core.security.truststore.password"));
+
+    }
 
 
     @Before
@@ -45,7 +69,7 @@ public class KGateTest {
 
 
     @Test
-    public void test() throws IOException, KGateServerException {
+    public void test() throws IOException, KGateServerException, NoSuchAlgorithmException, KeyManagementException {
 
         IGateway gateway = new DefaultGateway(new DefaultServer(new IProcessorFactory() {
             @Override
@@ -99,11 +123,25 @@ public class KGateTest {
                 new DefaultServerSocketFactory(),
                 new DefaultClientSocketFactory()));
 
-        ServerSocket serverSocket = new ServerSocket(7072);
+        ServerSocket serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(7072);
 
         gateway.start();
 
-        Socket socket = new Socket("127.0.0.1", 7070);
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[] { new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+            }
+            @Override
+            public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+            }
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+        }}, null);
+        Socket socket = sslContext.getSocketFactory().createSocket("127.0.0.1", 7070);
         socket.getOutputStream().write("kwoin".getBytes());
         socket.getInputStream().read();
         socket.close();
@@ -112,48 +150,5 @@ public class KGateTest {
         Assert.assertTrue(success);
 
     }
-
-
-    @Test
-    public void test2() throws IOException, KGateServerException, InterruptedException {
-
-        IGateway gateway = new DefaultGateway();
-        ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
-        //server.setSoTimeout(1000);
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Socket target = server.accept();
-                    success = 'k' == target.getInputStream().read()
-                            && 'w' == target.getInputStream().read()
-                            && 'o' == target.getInputStream().read()
-                            && 'i' == target.getInputStream().read()
-                            && 'n' == target.getInputStream().read()
-                            && -1 == target.getInputStream().read();
-                    target.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.start();
-
-        gateway.start();
-
-        Socket source = new Socket(KGateConfig.getConfig().getString("kgate.core.server.host"), KGateConfig.getConfig().getInt("kgate.core.server.port"));
-        source.getOutputStream().write("kwoin".getBytes());
-        source.close();
-
-        t.join();
-
-        gateway.stop();
-        server.close();
-        source.close();
-
-        Assert.assertTrue(success);
-
-    }
-
 
 }
