@@ -15,6 +15,7 @@ import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
 import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,7 +56,22 @@ public class KGateTlsTest {
         if(!KGateConfig.getConfig().getString("kgate.core.security.truststore.path").isEmpty())
             System.setProperty("javax.net.ssl.trustStore", KGateConfig.getConfig().getString("kgate.core.security.truststore.path"));
         if(!KGateConfig.getConfig().getString("kgate.core.security.truststore.password").isEmpty())
-            System.setProperty("javax.net.ssl.trustStore", KGateConfig.getConfig().getString("kgate.core.security.truststore.password"));
+            System.setProperty("javax.net.ssl.trustStorePassword", KGateConfig.getConfig().getString("kgate.core.security.truststore.password"));
+
+    }
+
+
+    @AfterClass
+    public static void afterClass() {
+
+        System.setProperty("javax.net.debug", "");
+        KGateConfig.getConfig().setProperty("kgate.core.security.tlsEnabled", "false");
+        System.setProperty("javax.net.ssl.keyStore", "");
+        System.setProperty("javax.net.ssl.keyStorePassword", "");
+        System.setProperty("javax.net.ssl.trustStore", "");
+        System.setProperty("javax.net.ssl.trustStore", "");
+
+
 
     }
 
