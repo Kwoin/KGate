@@ -5,7 +5,9 @@ import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
 import com.github.kwoin.kgate.core.gateway.IGateway;
+import com.github.kwoin.kgate.core.gateway.client.DefaultClientSocketFactory;
 import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
+import com.github.kwoin.kgate.core.gateway.server.DefaultServerSocketFactory;
 import com.github.kwoin.kgate.core.processor.DefaultProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessorFactory;
@@ -56,7 +58,9 @@ public class SequencerTest {
                         }
                 );
             }
-        }));
+        },
+                new DefaultServerSocketFactory(),
+                new DefaultClientSocketFactory()));
 
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
         server.setSoTimeout(1000);

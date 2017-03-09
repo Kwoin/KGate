@@ -2,7 +2,9 @@ package com.github.kwoin.kgate.http.gateway;
 
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
+import com.github.kwoin.kgate.core.gateway.client.DefaultClientSocketFactory;
 import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
+import com.github.kwoin.kgate.core.gateway.server.DefaultServerSocketFactory;
 import com.github.kwoin.kgate.core.gateway.server.IServer;
 import com.github.kwoin.kgate.core.processor.DefaultProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessor;
@@ -58,7 +60,9 @@ public class HttpGateway extends DefaultGateway {
             public IProcessor newProcessor() {
                 return createProcessor();
             }
-        });
+        },
+                new DefaultServerSocketFactory(),
+                new DefaultClientSocketFactory());
 
     }
 

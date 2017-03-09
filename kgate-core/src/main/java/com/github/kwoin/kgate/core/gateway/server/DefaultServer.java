@@ -5,7 +5,9 @@ import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
-import com.github.kwoin.kgate.core.processor.DefaultProcessor;
+import com.github.kwoin.kgate.core.gateway.client.DefaultClientSocketFactory;
+import com.github.kwoin.kgate.core.gateway.client.IClientSocketFactory;
+import com.github.kwoin.kgate.core.processor.DefaultProcessorFactory;
 import com.github.kwoin.kgate.core.processor.IProcessor;
 import com.github.kwoin.kgate.core.processor.IProcessorFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
@@ -13,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.NoSuchElementException;
@@ -29,6 +30,8 @@ public class DefaultServer implements IServer {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultServer.class);
 
+    protected IServerSocketFactory serverSocketFactory;
+    protected IClientSocketFactory clientSocketFactory;
     protected ServerSocket serverSocket;
     protected IProcessorFactory processorFactory;
     protected ExecutorService threadPool;
@@ -37,19 +40,18 @@ public class DefaultServer implements IServer {
 
     public DefaultServer() {
 
-        this(new IProcessorFactory() {
-            @Override
-            public IProcessor newProcessor() {
-                return new DefaultProcessor();
-            }
-        });
+        this(new DefaultProcessorFactory(),
+                new DefaultServerSocketFactory(),
+                new DefaultClientSocketFactory());
 
     }
 
 
-    public DefaultServer(IProcessorFactory processorFactory) {
+    public DefaultServer(IProcessorFactory processorFactory, IServerSocketFactory serverSocketFactory, IClientSocketFactory clientSocketFactory) {
 
         this.processorFactory = processorFactory;
+        this.serverSocketFactory = serverSocketFactory;
+        this.clientSocketFactory = clientSocketFactory;
 
     }
 
@@ -59,17 +61,12 @@ public class DefaultServer implements IServer {
 
         logger.debug("Starting Server (" + this + ") ...");
 
-        if(processorFactory == null)
-            throw new KGateServerException(new NullPointerException("processorFactory not set"));
-
         try {
             int poolSize = KGateConfig.getConfig().getInt("kgate.core.server.poolSize", 10);
             threadPool = Executors.newFixedThreadPool(poolSize);
 
-            int serverPort = KGateConfig.getConfig().getInt("kgate.core.server.port", 7070);
-            String serverHost = KGateConfig.getConfig().getString("kgate.core.server.host", "127.0.0.1");
-            InetAddress serverHostInet = InetAddress.getByName(serverHost);
-            serverSocket = new ServerSocket(serverPort, 0, serverHostInet);
+            serverSocket = serverSocketFactory.newServerSocket();
+
         } catch (IOException|NoSuchElementException e) {
             throw new KGateServerException(e);
         }
@@ -138,11 +135,7 @@ public class DefaultServer implements IServer {
 
                     KGateSocket kgateSocketSource = new KGateSocket(source);
 
-                    KGateConfig.getConfig().setThrowExceptionOnMissing(true);
-                    String host = KGateConfig.getConfig().getString("kgate.core.client.host");
-                    KGateConfig.getConfig().setThrowExceptionOnMissing(false);
-                    int port = KGateConfig.getConfig().getInt("kgate.core.client.port");
-                    KGateSocket kgateSocketClient = new KGateSocket(new Socket(host, port));
+                    KGateSocket kgateSocketClient = clientSocketFactory.newClientSocket();
 
                     IContext sessionContext = new DefaultContext(IContext.ECoreScope.SESSION, context);
                     sessionContext.setVariable(IContext.ECoreScope.SESSION, EDirection.DIRECTION_FIELD, EDirection.REQUEST);
