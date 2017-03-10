@@ -11,12 +11,14 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
 
     protected AbstractState[] states;
     protected int currentStateIndex;
+    protected boolean resetOnCut;
 
 
-    public StateMachineSequencer() {
+    public StateMachineSequencer(boolean resetOnCut) {
 
         currentStateIndex = 0;
         states = initializeStates();
+        this.resetOnCut = resetOnCut;
 
     }
 
@@ -27,10 +29,12 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
         currentStateIndex = states[currentStateIndex].push(b);
         switch(currentStateIndex) {
             case CUT:
-                reset();
+                if(resetOnCut)
+                    reset();
                 return ESequencerResult.CUT;
             case STOP:
-                reset();
+                if(resetOnCut)
+                    reset();
                 return ESequencerResult.STOP;
             default:
                 return ESequencerResult.CONTINUE;

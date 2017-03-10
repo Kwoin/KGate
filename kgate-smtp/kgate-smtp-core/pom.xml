@@ -11,5 +11,14 @@
 
     <artifactId>kgate-smtp-core</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>com.github.kwoin.kgate</groupId>
+            <artifactId>kgate-core</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+    </dependencies>
 
 </project>

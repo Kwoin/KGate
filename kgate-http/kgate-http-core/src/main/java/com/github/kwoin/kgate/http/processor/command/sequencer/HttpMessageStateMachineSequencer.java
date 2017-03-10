@@ -40,7 +40,7 @@ public class HttpMessageStateMachineSequencer extends StateMachineSequencer {
 
     public HttpMessageStateMachineSequencer(IContext context) {
 
-        super();
+        super(true);
 
         if(context.getVariable(IContext.ECoreScope.SESSION, EDirection.DIRECTION_FIELD) == EDirection.RESPONSE
                 && context.getVariable(IContext.ECoreScope.SESSION, HttpReadRequestMethodCommand.REQUEST_METHOD_FIELD).equals("HEAD"))
