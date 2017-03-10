@@ -5,22 +5,19 @@ import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
 import com.github.kwoin.kgate.core.gateway.IGateway;
-import com.github.kwoin.kgate.core.gateway.client.DefaultClientSocketFactory;
-import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
-import com.github.kwoin.kgate.core.gateway.server.DefaultServerSocketFactory;
-import com.github.kwoin.kgate.core.processor.DefaultProcessor;
-import com.github.kwoin.kgate.core.processor.IProcessor;
-import com.github.kwoin.kgate.core.processor.IProcessorFactory;
 import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.processor.chain.SequencerChain;
-import com.github.kwoin.kgate.core.processor.chain.command.SequencerCommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleLoggerCommand;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleRelayerCommand;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleSaveInContextCommand;
+import com.github.kwoin.kgate.core.processor.command.ICommand;
+import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
+import com.github.kwoin.kgate.core.processor.command.SequencerCommand;
+import com.github.kwoin.kgate.core.processor.command.SimpleLoggerCommand;
+import com.github.kwoin.kgate.core.processor.command.SimpleRelayerCommand;
+import com.github.kwoin.kgate.core.processor.command.SimpleSaveInContextCommand;
+import com.github.kwoin.kgate.core.processor.command.sequencer.ESequencerResult;
+import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencer;
+import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,27 +37,13 @@ public class SequencerTest {
     @Test
     public void testSequencer() throws IOException, KGateServerException, InterruptedException {
 
-        IGateway gateway = new DefaultGateway(new DefaultServer(new IProcessorFactory() {
+        IGateway gateway = new DefaultGateway();
+        gateway.setSourceToTargetChainFactory(new IChainFactory() {
             @Override
-            public IProcessor newProcessor() {
-                return new DefaultProcessor(
-                        new IChainFactory() {
-                            @Override
-                            public IChain newChain() {
-                                return new SequencerChain(new MockSequencer());
-                            }
-                        },
-                        new IChainFactory() {
-                            @Override
-                            public IChain newChain() {
-                                return new DefaultChain();
-                            }
-                        }
-                );
+            public IChain newChain(IContext context) {
+                return new SequencerChain(new MockSequencer());
             }
-        },
-                new DefaultServerSocketFactory(),
-                new DefaultClientSocketFactory()));
+        });
 
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
         server.setSoTimeout(1000);
@@ -135,11 +118,11 @@ public class SequencerTest {
 
             }, new IChainFactory() {
                         @Override
-                        public IChain newChain() {
+                        public IChain newChain(IContext context) {
                             IChain chain = new DefaultChain();
                             chain.setCommandListFactory(new ICommandListFactory() {
                                 @Override
-                                public List<ICommand> newCommandList() {
+                                public List<ICommand> newCommandList(IContext context1) {
                                     return Arrays.asList(
                                             new SimpleLoggerCommand(),
                                             new SimpleSaveInContextCommand(IContext.ECoreScope.APPLICATION, "test.separator"),
@@ -151,11 +134,11 @@ public class SequencerTest {
                         }
              }, new IChainFactory() {
                 @Override
-                public IChain newChain() {
+                public IChain newChain(IContext context) {
                     IChain chain = new DefaultChain();
                     chain.setCommandListFactory(new ICommandListFactory() {
                         @Override
-                        public List<ICommand> newCommandList() {
+                        public List<ICommand> newCommandList(IContext context1) {
                             return Arrays.asList(
                                     new SimpleLoggerCommand(),
                                     new SimpleSaveInContextCommand(IContext.ECoreScope.APPLICATION, "test.unhandled"),

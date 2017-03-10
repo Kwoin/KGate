@@ -1,13 +1,12 @@
 package com.github.kwoin.kgate.core.processor.chain;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleRelayerCommand;
+import com.github.kwoin.kgate.core.processor.command.DefaultCommandListFactory;
+import com.github.kwoin.kgate.core.processor.command.ICommand;
+import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -24,19 +23,7 @@ public class DefaultChain implements IChain {
 
     public DefaultChain() {
 
-        this(new ICommandListFactory() {
-            @Override
-            public List<ICommand> newCommandList() {
-                return Arrays.asList(new SimpleRelayerCommand());
-            }
-        });
-
-    }
-
-
-    public DefaultChain(ICommandListFactory commandListFactory) {
-
-        this.commandListFactory = commandListFactory;
+        this.commandListFactory = new DefaultCommandListFactory();
         interrupt = false;
 
     }
@@ -61,7 +48,7 @@ public class DefaultChain implements IChain {
     @Override
     public void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException {
 
-        commands = commandListFactory.newCommandList();
+        commands = commandListFactory.newCommandList(context);
 
         int k=0;
         while(k < commands.size() && !interrupt) {

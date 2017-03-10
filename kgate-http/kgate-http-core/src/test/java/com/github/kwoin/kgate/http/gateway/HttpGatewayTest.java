@@ -1,9 +1,12 @@
 package com.github.kwoin.kgate.http.gateway;
 
-import com.github.kwoin.kgate.core.gateway.IGateway;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleLoggerCommand;
+import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
+import com.github.kwoin.kgate.core.processor.chain.IChain;
+import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
+import com.github.kwoin.kgate.core.processor.command.ICommand;
+import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
+import com.github.kwoin.kgate.core.processor.command.SimpleLoggerCommand;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.server.Request;
@@ -59,10 +62,18 @@ public class HttpGatewayTest {
     @Test
     public void testSimpleGateway() throws Exception {
 
-        IGateway gateway = new HttpGateway(new ICommandListFactory() {
+        HttpGateway gateway = new HttpGateway();
+        gateway.setHttpChainFactory(new IChainFactory() {
             @Override
-            public List<ICommand> newCommandList() {
-                return Arrays.asList(new SimpleLoggerCommand());
+            public IChain newChain(IContext context) {
+                IChain chain = new DefaultChain();
+                chain.setCommandListFactory(new ICommandListFactory() {
+                    @Override
+                    public List<ICommand> newCommandList(IContext context) {
+                        return Arrays.asList(new SimpleLoggerCommand());
+                    }
+                });
+                return chain;
             }
         });
 

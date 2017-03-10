@@ -1,30 +1,8 @@
 package com.github.kwoin.kgate.http.gateway;
 
-import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
-import com.github.kwoin.kgate.core.gateway.client.DefaultClientSocketFactory;
-import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
-import com.github.kwoin.kgate.core.gateway.server.DefaultServerSocketFactory;
-import com.github.kwoin.kgate.core.gateway.server.IServer;
-import com.github.kwoin.kgate.core.processor.DefaultProcessor;
-import com.github.kwoin.kgate.core.processor.IProcessor;
-import com.github.kwoin.kgate.core.processor.IProcessorFactory;
-import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
-import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
-import com.github.kwoin.kgate.core.processor.chain.SequencerChain;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.SequencerCommand;
-import com.github.kwoin.kgate.core.processor.chain.command.SimpleRelayerCommand;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.ISequencer;
-import com.github.kwoin.kgate.http.processor.chain.command.HttpReadRequestMethodCommand;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.HttpMessageStateMachineSequencer;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.github.kwoin.kgate.http.processor.chain.HttpSourceToTargetChainFactory;
 
 
 /**
@@ -33,122 +11,36 @@ import java.util.List;
 public class HttpGateway extends DefaultGateway {
 
 
-    protected ICommandListFactory httpCommandListFactory;
-
-
-    public HttpGateway(@Nullable ICommandListFactory httpCommandListFactory) {
+    public HttpGateway() {
 
         super();
-        setServer(createServer());
-
-        this.httpCommandListFactory = httpCommandListFactory != null
-                ? httpCommandListFactory
-                : new ICommandListFactory() {
-                    @Override
-                    public List<ICommand> newCommandList() {
-                        return Collections.EMPTY_LIST;
-                    }
-                };
+        sourceToTargetChainFactory = new HttpSourceToTargetChainFactory();
 
     }
 
 
-    protected IServer createServer() {
+    public void setHttpChainFactory(IChainFactory httpChainFactory) {
 
-        return new DefaultServer(new IProcessorFactory() {
-            @Override
-            public IProcessor newProcessor() {
-                return createProcessor();
-            }
-        },
-                new DefaultServerSocketFactory(),
-                new DefaultClientSocketFactory());
+        ((HttpSourceToTargetChainFactory)sourceToTargetChainFactory).setHttpChainFactory(httpChainFactory);
 
     }
 
 
-    protected IProcessor createProcessor() {
+    public void setOnUnhandledChainFactory(IChainFactory onUnhandledChainFactory) {
 
-        return new DefaultProcessor(
-                new IChainFactory() {
-                    @Override
-                    public IChain newChain() {
-                        return createSourceToTargetChain();
-                    }
-                },
-                new IChainFactory() {
-                    @Override
-                    public IChain newChain() {
-                        return createTargetToSourceChain();
-                    }
-                });
+        ((HttpSourceToTargetChainFactory)sourceToTargetChainFactory).setOnUnhandledChainFactory(onUnhandledChainFactory);
 
     }
 
 
-    protected IChain createSourceToTargetChain() {
+    @Override
+    public void setSourceToTargetChainFactory(IChainFactory sourceToTargetChainFactory) {
 
-        return new SequencerChain(new SequencerCommand(
-                new SequencerCommand.ISequencerFactory() {
-                    @Override
-                    public ISequencer newSequencer(IContext context) {
-                        return createSequencer(context);
-                    }
-                },
-                new IChainFactory() {
-                    @Override
-                    public IChain newChain() {
-                        return createOnSeparatorChain();
-                    }
-                },
-                new IChainFactory() {
-                    @Override
-                    public IChain newChain() {
-                        return createOnUnhandledChain();
-                    }
-                }
+        if (!(sourceToTargetChainFactory instanceof HttpSourceToTargetChainFactory))
+            throw new IllegalArgumentException("sourceToTargetChainFactory must be of type HttpSourceToTargetChainFactory");
 
-        ));
+        super.setSourceToTargetChainFactory(sourceToTargetChainFactory);
 
     }
-
-
-    protected ISequencer createSequencer(IContext context) {
-
-        return new HttpMessageStateMachineSequencer(context);
-
-    }
-
-
-    protected IChain createOnSeparatorChain() {
-
-        return new DefaultChain(new ICommandListFactory() {
-            @Override
-            public List<ICommand> newCommandList() {
-
-                return Arrays.asList(
-                        new HttpReadRequestMethodCommand(),
-                        new DefaultChain(httpCommandListFactory),
-                        new SimpleRelayerCommand()
-                );
-            }
-        });
-
-    }
-
-
-    protected IChain createOnUnhandledChain() {
-
-        return new DefaultChain();
-
-    }
-
-
-    protected IChain createTargetToSourceChain() {
-
-        return new DefaultChain();
-
-    }
-
 
 }

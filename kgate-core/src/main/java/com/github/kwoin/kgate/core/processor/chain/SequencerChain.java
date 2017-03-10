@@ -1,8 +1,9 @@
 package com.github.kwoin.kgate.core.processor.chain;
 
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.SequencerCommand;
+import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.processor.command.ICommand;
+import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
+import com.github.kwoin.kgate.core.processor.command.SequencerCommand;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ public class SequencerChain extends DefaultChain {
 
         commandListFactory = new ICommandListFactory() {
             @Override
-            public List<ICommand> newCommandList() {
+            public List<ICommand> newCommandList(IContext context) {
                 return Arrays.asList(sequencer);
             }
         };

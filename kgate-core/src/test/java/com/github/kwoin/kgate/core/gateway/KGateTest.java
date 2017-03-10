@@ -3,17 +3,11 @@ package com.github.kwoin.kgate.core.gateway;
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
-import com.github.kwoin.kgate.core.gateway.client.DefaultClientSocketFactory;
-import com.github.kwoin.kgate.core.gateway.server.DefaultServer;
-import com.github.kwoin.kgate.core.gateway.server.DefaultServerSocketFactory;
-import com.github.kwoin.kgate.core.processor.DefaultProcessor;
-import com.github.kwoin.kgate.core.processor.IProcessor;
-import com.github.kwoin.kgate.core.processor.IProcessorFactory;
 import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommandListFactory;
+import com.github.kwoin.kgate.core.processor.command.ICommand;
+import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +17,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -47,57 +40,47 @@ public class KGateTest {
     @Test
     public void test() throws IOException, KGateServerException {
 
-        IGateway gateway = new DefaultGateway(new DefaultServer(new IProcessorFactory() {
+
+        ICommandListFactory commandListFactory = new ICommandListFactory() {
             @Override
-            public IProcessor newProcessor() {
-                return new DefaultProcessor(
-                        new IChainFactory() {
-                            @Override
-                            public IChain newChain() {
-                                return new DefaultChain(new ICommandListFactory() {
-                                    @Override
-                                    public List<ICommand> newCommandList() {
-                                        return Arrays.asList(new ICommand() {
-                                            @Override
-                                            public void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException {
-                                                try {
-                                                    byte[] buf = new byte[5];
-                                                    source.getInputStream().read(buf);
-                                                    String in = new String(buf);
-                                                    System.out.println("in : " + in);
-                                                    success = in.equals("kwoin");
-                                                    source.getOutputStream().write("ok".getBytes());
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } finally {
-                                                    try {
-                                                        source.close();
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        },
-                        new IChainFactory() {
-                            @Override
-                            public IChain newChain() {
-                                return new DefaultChain(new ICommandListFactory() {
-                                    @Override
-                                    public List<ICommand> newCommandList() {
-                                        return Collections.EMPTY_LIST;
-                                    }
-                                });
+            public List<ICommand> newCommandList(IContext context) {
+
+                return Arrays.asList(new ICommand() {
+                    @Override
+                    public void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException {
+                        try {
+                            byte[] buf = new byte[5];
+                            source.getInputStream().read(buf);
+                            String in = new String(buf);
+                            System.out.println("in : " + in);
+                            success = in.equals("kwoin");
+                            source.getOutputStream().write("ok".getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            try {
+                                source.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
-                );
+                    }
+                });
+
             }
-        },
-                new DefaultServerSocketFactory(),
-                new DefaultClientSocketFactory()));
+        };
+
+        IChainFactory sourceToTargetChainFactory = new IChainFactory() {
+            @Override
+            public IChain newChain(IContext context) {
+                IChain chain = new DefaultChain();
+                chain.setCommandListFactory(commandListFactory);
+                return chain;
+            }
+        };
+
+        IGateway gateway = new DefaultGateway();
+        gateway.setSourceToTargetChainFactory(sourceToTargetChainFactory);
 
         ServerSocket serverSocket = new ServerSocket(7072);
 
