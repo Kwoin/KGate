@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.http.processor.chain.command.sequencer;
+package com.github.kwoin.kgate.http.processor.command.sequencer;
 
 import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;

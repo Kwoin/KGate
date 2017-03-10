@@ -12,8 +12,8 @@ import com.github.kwoin.kgate.core.processor.command.SequencerCommand;
 import com.github.kwoin.kgate.core.processor.command.SimpleRelayerCommand;
 import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencer;
 import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencerFactory;
-import com.github.kwoin.kgate.http.processor.chain.command.HttpReadRequestMethodCommand;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.HttpMessageStateMachineSequencer;
+import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
+import com.github.kwoin.kgate.http.processor.command.sequencer.HttpMessageStateMachineSequencer;
 
 import java.util.Arrays;
 import java.util.List;

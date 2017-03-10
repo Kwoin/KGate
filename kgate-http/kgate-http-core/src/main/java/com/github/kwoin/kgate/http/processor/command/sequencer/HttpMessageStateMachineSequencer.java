@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.http.processor.chain.command.sequencer;
+package com.github.kwoin.kgate.http.processor.command.sequencer;
 
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
@@ -6,16 +6,16 @@ import com.github.kwoin.kgate.core.processor.command.sequencer.StateMachineSeque
 import com.github.kwoin.kgate.core.processor.command.sequencer.state.AbstractState;
 import com.github.kwoin.kgate.core.processor.command.sequencer.state.ReadNBytesState;
 import com.github.kwoin.kgate.core.processor.command.sequencer.state.StopState;
-import com.github.kwoin.kgate.http.processor.chain.command.HttpReadRequestMethodCommand;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.FinishHeaderState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.FinishStartLineState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.NoBodyState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadChunkState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadContentLengthState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadHeaderState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadHttpVersionState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadResponseCodeState;
-import com.github.kwoin.kgate.http.processor.chain.command.sequencer.state.ReadTransferEncodingState;
+import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.FinishHeaderState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.FinishStartLineState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.NoBodyState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.ReadChunkState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.ReadContentLengthState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.ReadHeaderState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.ReadHttpVersionState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.ReadResponseCodeState;
+import com.github.kwoin.kgate.http.processor.command.sequencer.state.ReadTransferEncodingState;
 
 
 /**

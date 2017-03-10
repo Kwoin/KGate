@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.http.processor.chain.command;
+package com.github.kwoin.kgate.http.processor.command;
 
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;

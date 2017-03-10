@@ -10,6 +10,7 @@
     <modules>
         <module>kgate-core</module>
         <module>kgate-http</module>
+        <module>kgate-smtp</module>
     </modules>
 
     <name>KGate</name>
