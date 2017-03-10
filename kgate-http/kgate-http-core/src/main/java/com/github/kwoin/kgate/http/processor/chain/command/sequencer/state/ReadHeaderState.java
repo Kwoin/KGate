@@ -1,9 +1,9 @@
 package com.github.kwoin.kgate.http.processor.chain.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.IStateMachine;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.CompositeState;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.ReadSequenceState;
-import com.github.kwoin.kgate.core.processor.chain.command.sequencer.state.callback.SwitchStateCallback;
+import com.github.kwoin.kgate.core.processor.command.sequencer.IStateMachine;
+import com.github.kwoin.kgate.core.processor.command.sequencer.state.CompositeState;
+import com.github.kwoin.kgate.core.processor.command.sequencer.state.ReadSequenceState;
+import com.github.kwoin.kgate.core.processor.command.sequencer.state.callback.SwitchStateCallback;
 import com.github.kwoin.kgate.http.processor.chain.command.sequencer.HttpMessageStateMachineSequencer;
 
 

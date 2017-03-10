@@ -1,8 +1,7 @@
 package com.github.kwoin.kgate.core.processor;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
-import com.github.kwoin.kgate.core.processor.chain.IChain;
+import com.github.kwoin.kgate.core.processor.chain.DefaultChainFactory;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 import org.slf4j.Logger;
@@ -25,28 +24,19 @@ public class DefaultProcessor implements IProcessor {
 
     public DefaultProcessor() {
 
-        this(new IChainFactory() {
-                @Override
-                public IChain newChain() {
-                return new DefaultChain();
-            }
-            },
-            new IChainFactory() {
-                @Override
-                public IChain newChain() {
-                return new DefaultChain();
-            }
-            });
+        this.sourceToTargetChainFactory = new DefaultChainFactory();
+        this.targetToSourceChainFactory = new DefaultChainFactory();
 
     }
 
 
+    /*
     public DefaultProcessor(IChainFactory sourceToTargetChainFactory, IChainFactory targetToSourceChainFactory) {
 
         this.sourceToTargetChainFactory = sourceToTargetChainFactory;
         this.targetToSourceChainFactory = targetToSourceChainFactory;
 
-    }
+    }*/
 
 
     @Override
@@ -75,7 +65,7 @@ public class DefaultProcessor implements IProcessor {
             public void run() {
 
                 try {
-                    sourceToTargetChainFactory.newChain().run(source, client, context, null);
+                    sourceToTargetChainFactory.newChain(context).run(source, client, context, null);
                 } catch (IOException e) {
                     handleChainException(e, source, client);
                 }
@@ -87,7 +77,7 @@ public class DefaultProcessor implements IProcessor {
             public void run() {
 
                 try {
-                    targetToSourceChainFactory.newChain().run(client, source, context, null);
+                    targetToSourceChainFactory.newChain(context).run(client, source, context, null);
                 } catch (IOException e) {
                     handleChainException(e, source, client);
                 }

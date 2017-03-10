@@ -3,7 +3,7 @@ package com.github.kwoin.kgate.http.processor.chain.command;
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
-import com.github.kwoin.kgate.core.processor.chain.command.ICommand;
+import com.github.kwoin.kgate.core.processor.command.ICommand;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 
 import java.io.ByteArrayOutputStream;
