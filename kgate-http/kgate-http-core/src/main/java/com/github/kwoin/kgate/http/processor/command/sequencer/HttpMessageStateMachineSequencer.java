@@ -38,13 +38,20 @@ public class HttpMessageStateMachineSequencer extends StateMachineSequencer {
     private int contentLength;
 
 
-    public HttpMessageStateMachineSequencer(IContext context) {
+    public HttpMessageStateMachineSequencer() {
 
-        super(true);
+        super();
 
+    }
+
+
+    @Override
+    public void start(IContext context)  {
+
+        super.start(context);
         if(context.getVariable(IContext.ECoreScope.SESSION, EDirection.DIRECTION_FIELD) == EDirection.RESPONSE
                 && context.getVariable(IContext.ECoreScope.SESSION, HttpReadRequestMethodCommand.REQUEST_METHOD_FIELD).equals("HEAD"))
-        currentStateIndex = 2;
+            currentStateIndex = 2;
 
     }
 

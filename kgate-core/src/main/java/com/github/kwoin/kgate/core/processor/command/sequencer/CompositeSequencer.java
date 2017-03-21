@@ -1,5 +1,7 @@
 package com.github.kwoin.kgate.core.processor.command.sequencer;
 
+import com.github.kwoin.kgate.core.context.IContext;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +31,15 @@ public class CompositeSequencer implements ISequencer {
         sequencersComponents.add(sequencerComponent);
         Collections.copy(copy, sequencersComponents);
         return this;
+
+    }
+
+
+    @Override
+    public void start(IContext context) {
+
+        for (ISequencer sequencersComponent : sequencersComponents)
+            sequencersComponent.start(context);
 
     }
 
@@ -67,6 +78,8 @@ public class CompositeSequencer implements ISequencer {
     public void reset() {
 
         Collections.copy(copy, sequencersComponents);
+        for (ISequencer sequencerComponent : sequencersComponents)
+            sequencerComponent.reset();
 
     }
 }

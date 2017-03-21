@@ -94,6 +94,12 @@ public class SequencerTest {
                 public ISequencer newSequencer(IContext context) {
                     return new ISequencer() {
                         @Override
+                        public void start(IContext context) {
+
+                        }
+
+
+                        @Override
                         public ESequencerResult push(byte b) {
 
                             switch(b) {

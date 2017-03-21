@@ -1,5 +1,6 @@
 package com.github.kwoin.kgate.core.processor.command.sequencer;
 
+import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.command.sequencer.state.AbstractState;
 
 
@@ -12,13 +13,22 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
     protected AbstractState[] states;
     protected int currentStateIndex;
     protected boolean resetOnCut;
+    protected IContext context;
 
 
-    public StateMachineSequencer(boolean resetOnCut) {
+    public StateMachineSequencer() {
 
         currentStateIndex = 0;
         states = initializeStates();
-        this.resetOnCut = resetOnCut;
+        this.resetOnCut = true;
+
+    }
+
+
+    @Override
+    public void start(IContext context) {
+
+        this.context = context;
 
     }
 
