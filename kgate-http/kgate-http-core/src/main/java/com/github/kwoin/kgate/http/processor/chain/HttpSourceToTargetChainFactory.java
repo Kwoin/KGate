@@ -10,7 +10,7 @@ import com.github.kwoin.kgate.core.processor.command.ICommand;
 import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.processor.command.SequencerCommand;
 import com.github.kwoin.kgate.core.processor.command.SimpleRelayerCommand;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencer;
+import com.github.kwoin.kgate.core.processor.command.sequencer.DefaultSequencerFactory;
 import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencerFactory;
 import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
 import com.github.kwoin.kgate.http.processor.command.sequencer.HttpMessageStateMachineSequencer;
@@ -33,12 +33,7 @@ public class HttpSourceToTargetChainFactory implements IChainFactory {
 
     public HttpSourceToTargetChainFactory() {
 
-        sequencerFactory = new ISequencerFactory() {
-            @Override
-            public ISequencer newSequencer(IContext context) {
-                return new HttpMessageStateMachineSequencer(context);
-            }
-        };
+        sequencerFactory = new DefaultSequencerFactory(HttpMessageStateMachineSequencer.class);
 
         onSeparatorChainFactory = new IChainFactory() {
             @Override

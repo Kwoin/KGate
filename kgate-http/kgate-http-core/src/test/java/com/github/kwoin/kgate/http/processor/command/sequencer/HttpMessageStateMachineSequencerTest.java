@@ -6,6 +6,7 @@ import com.github.kwoin.kgate.core.processor.command.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.processor.command.sequencer.StateMachineSequencer;
 import com.github.kwoin.kgate.core.socket.KGateInputStream;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -18,7 +19,15 @@ import java.io.IOException;
 public class HttpMessageStateMachineSequencerTest {
 
 
-    private static final StateMachineSequencer stateMachineSequencer = new HttpMessageStateMachineSequencer(new DefaultContext(IContext.ECoreScope.APPLICATION));
+    private static final StateMachineSequencer stateMachineSequencer = new HttpMessageStateMachineSequencer();
+
+
+    @BeforeClass
+    public static void beforeClass() {
+
+        stateMachineSequencer.start(new DefaultContext(IContext.ECoreScope.APPLICATION));
+
+    }
 
 
     private KGateInputStream getResource(String resourceName) {

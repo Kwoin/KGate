@@ -37,9 +37,11 @@ public class SequencerCommand implements ICommand {
     public void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException {
 
         ISequencer sequencer = sequencerFactory.newSequencer(context);
-        KGateInputStream in = ((KGateInputStream) source.getInputStream());
-        int i;
+        sequencer.start(context);
 
+        KGateInputStream in = ((KGateInputStream) source.getInputStream());
+
+        int i;
         while((i = in.read()) != -1) {
 
            ESequencerResult result = sequencer.push((byte) i);
