@@ -4,9 +4,9 @@ import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.processor.chain.IChain;
 import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencer;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencerFactory;
+import com.github.kwoin.kgate.core.sequencer.ESequencerResult;
+import com.github.kwoin.kgate.core.sequencer.ISequencer;
+import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
 import com.github.kwoin.kgate.core.socket.KGateInputStream;
 import com.github.kwoin.kgate.core.socket.KGateSocket;
 

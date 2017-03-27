@@ -15,9 +15,9 @@ import com.github.kwoin.kgate.core.processor.command.SequencerCommand;
 import com.github.kwoin.kgate.core.processor.command.SimpleLoggerCommand;
 import com.github.kwoin.kgate.core.processor.command.SimpleRelayerCommand;
 import com.github.kwoin.kgate.core.processor.command.SimpleSaveInContextCommand;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencer;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencerFactory;
+import com.github.kwoin.kgate.core.sequencer.ESequencerResult;
+import com.github.kwoin.kgate.core.sequencer.ISequencer;
+import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

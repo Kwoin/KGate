@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.core.processor.command.sequencer.state.condition;
+package com.github.kwoin.kgate.core.sequencer.state.condition;
 
 /**
  * @author P. WILLEMET

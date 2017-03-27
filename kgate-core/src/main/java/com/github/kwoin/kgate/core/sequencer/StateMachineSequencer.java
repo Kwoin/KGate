@@ -1,7 +1,7 @@
-package com.github.kwoin.kgate.core.processor.command.sequencer;
+package com.github.kwoin.kgate.core.sequencer;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.processor.command.sequencer.state.AbstractState;
+import com.github.kwoin.kgate.core.sequencer.state.AbstractState;
 
 
 /**

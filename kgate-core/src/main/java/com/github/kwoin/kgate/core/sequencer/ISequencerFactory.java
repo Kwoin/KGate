@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.core.processor.command.sequencer;
+package com.github.kwoin.kgate.core.sequencer;
 
 import com.github.kwoin.kgate.core.context.IContext;
 

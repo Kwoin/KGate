@@ -40,12 +40,13 @@ public class DefaultGateway implements IGateway {
 
         started = false;
         context = new DefaultContext(IContext.ECoreScope.APPLICATION);
-        this.serverFactory = new DefaultServerFactory();
-        this.processorFactory = new DefaultProcessorFactory();
-        this.serverSocketFactory = new DefaultServerSocketFactory();
-        this.clientSocketFactory = new DefaultClientSocketFactory();
-        this.sourceToTargetChainFactory = new DefaultChainFactory();
-        this.targetToSourceChainFactory = new DefaultChainFactory();
+
+        serverFactory = new DefaultServerFactory();
+        processorFactory = new DefaultProcessorFactory();
+        serverSocketFactory = new DefaultServerSocketFactory();
+        clientSocketFactory = new DefaultClientSocketFactory();
+        sourceToTargetChainFactory = new DefaultChainFactory();
+        targetToSourceChainFactory = new DefaultChainFactory();
 
     }
 

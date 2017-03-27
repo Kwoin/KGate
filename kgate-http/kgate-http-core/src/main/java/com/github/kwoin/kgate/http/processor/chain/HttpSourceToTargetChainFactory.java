@@ -10,8 +10,8 @@ import com.github.kwoin.kgate.core.processor.command.ICommand;
 import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.processor.command.SequencerCommand;
 import com.github.kwoin.kgate.core.processor.command.SimpleRelayerCommand;
-import com.github.kwoin.kgate.core.processor.command.sequencer.DefaultSequencerFactory;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencerFactory;
+import com.github.kwoin.kgate.core.sequencer.DefaultSequencerFactory;
+import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
 import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
 import com.github.kwoin.kgate.http.processor.command.sequencer.HttpMessageStateMachineSequencer;
 

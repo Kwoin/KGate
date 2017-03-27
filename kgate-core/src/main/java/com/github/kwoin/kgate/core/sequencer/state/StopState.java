@@ -1,6 +1,6 @@
-package com.github.kwoin.kgate.core.processor.command.sequencer.state;
+package com.github.kwoin.kgate.core.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.command.sequencer.IStateMachine;
+import com.github.kwoin.kgate.core.sequencer.IStateMachine;
 
 
 /**

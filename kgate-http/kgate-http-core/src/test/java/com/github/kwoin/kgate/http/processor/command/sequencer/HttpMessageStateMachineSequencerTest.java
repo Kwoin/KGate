@@ -2,8 +2,8 @@ package com.github.kwoin.kgate.http.processor.command.sequencer;
 
 import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.command.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.sequencer.ESequencerResult;
+import com.github.kwoin.kgate.core.sequencer.StateMachineSequencer;
 import com.github.kwoin.kgate.core.socket.KGateInputStream;
 import org.junit.Assert;
 import org.junit.BeforeClass;

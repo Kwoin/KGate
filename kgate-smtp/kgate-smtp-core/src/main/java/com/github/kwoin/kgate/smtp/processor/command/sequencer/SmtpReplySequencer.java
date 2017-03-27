@@ -1,8 +1,8 @@
 package com.github.kwoin.kgate.smtp.processor.command.sequencer;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.core.processor.command.sequencer.ISequencer;
+import com.github.kwoin.kgate.core.sequencer.ESequencerResult;
+import com.github.kwoin.kgate.core.sequencer.ISequencer;
 
 import java.util.Arrays;
 

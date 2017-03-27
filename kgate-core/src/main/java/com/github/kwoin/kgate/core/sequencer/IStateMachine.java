@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.core.processor.command.sequencer;
+package com.github.kwoin.kgate.core.sequencer;
 
 /**
  * @author P. WILLEMET

@@ -1,12 +1,12 @@
 package com.github.kwoin.kgate.http.processor.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.processor.command.sequencer.IStateMachine;
-import com.github.kwoin.kgate.core.processor.command.sequencer.StateMachineSequencer;
-import com.github.kwoin.kgate.core.processor.command.sequencer.state.AbstractState;
-import com.github.kwoin.kgate.core.processor.command.sequencer.state.ReadSequenceState;
-import com.github.kwoin.kgate.core.processor.command.sequencer.state.ReadUntilSequenceConditionalState;
-import com.github.kwoin.kgate.core.processor.command.sequencer.state.callback.SwitchStateCallback;
-import com.github.kwoin.kgate.core.processor.command.sequencer.state.condition.DigitCondition;
+import com.github.kwoin.kgate.core.sequencer.IStateMachine;
+import com.github.kwoin.kgate.core.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.core.sequencer.state.AbstractState;
+import com.github.kwoin.kgate.core.sequencer.state.ReadSequenceState;
+import com.github.kwoin.kgate.core.sequencer.state.ReadUntilSequenceConditionalState;
+import com.github.kwoin.kgate.core.sequencer.state.callback.SwitchStateCallback;
+import com.github.kwoin.kgate.core.sequencer.state.condition.DigitCondition;
 import com.github.kwoin.kgate.http.processor.command.sequencer.HttpMessageStateMachineSequencer;
 
 
