@@ -15,6 +15,14 @@ public class SimpleLoggerCommand implements ICommand {
 
     private final Logger logger = LoggerFactory.getLogger(SimpleLoggerCommand.class);
     private static final int BUFFER_SIZE = 1024;
+    private String text;
+
+
+    public SimpleLoggerCommand(String text) {
+
+        this.text = text;
+
+    }
 
 
     @Override
@@ -26,6 +34,7 @@ public class SimpleLoggerCommand implements ICommand {
         while( (len = inputPoint.getInputStream().read(b)) > 0);
             str += new String(b);
 
+        logger.info(text);
         logger.info(str);
 
     }

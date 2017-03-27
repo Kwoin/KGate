@@ -3,6 +3,7 @@ package com.github.kwoin.kgate.core.gateway;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.gateway.command.ISequencerComponentsFactory;
 import com.github.kwoin.kgate.core.gateway.command.SequencerCommand;
+import com.github.kwoin.kgate.core.gateway.command.SimpleLoggerCommand;
 import com.github.kwoin.kgate.core.gateway.command.SimpleRelayerCommand;
 import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChain;
 import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
@@ -48,7 +49,7 @@ public class SequencerKGateComponentsFactory extends DefaultKGateComponentsFacto
     @Override
     public IChain onUnhandledMessage(IContext context) {
 
-        return new DefaultChain(new SimpleRelayerCommand());
+        return new DefaultChain(new SimpleLoggerCommand(), new SimpleRelayerCommand());
 
     }
 }
