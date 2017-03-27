@@ -11,6 +11,7 @@
         <module>kgate-core</module>
         <module>kgate-http</module>
         <module>kgate-smtp</module>
+        <module>kgate-default</module>
     </modules>
 
     <name>KGate</name>

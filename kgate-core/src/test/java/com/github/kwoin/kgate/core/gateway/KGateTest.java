@@ -3,12 +3,12 @@ package com.github.kwoin.kgate.core.gateway;
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
-import com.github.kwoin.kgate.core.processor.chain.DefaultChain;
-import com.github.kwoin.kgate.core.processor.chain.IChain;
-import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
-import com.github.kwoin.kgate.core.processor.command.ICommand;
-import com.github.kwoin.kgate.core.processor.command.ICommandListFactory;
-import com.github.kwoin.kgate.core.socket.KGateSocket;
+import com.github.kwoin.kgate.core.gateway.chain.DefaultChain;
+import com.github.kwoin.kgate.core.gateway.chain.IChain;
+import com.github.kwoin.kgate.core.gateway.chain.IChainFactory;
+import com.github.kwoin.kgate.core.gateway.command.ICommand;
+import com.github.kwoin.kgate.core.gateway.command.ICommandListFactory;
+import com.github.kwoin.kgate.core.gateway.socket.KGateSocket;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -102,7 +102,7 @@ public class KGateTest {
 
         IGateway gateway = new DefaultGateway();
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
-        //server.setSoTimeout(1000);
+        //input.setSoTimeout(1000);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

@@ -4,7 +4,7 @@ import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.sequencer.ESequencerResult;
 import com.github.kwoin.kgate.core.sequencer.StateMachineSequencer;
-import com.github.kwoin.kgate.core.socket.KGateInputStream;
+import com.github.kwoin.kgate.core.gateway.input.DefaultInputPoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,13 +30,13 @@ public class HttpMessageStateMachineSequencerTest {
     }
 
 
-    private KGateInputStream getResource(String resourceName) {
+    private DefaultInputPoint getResource(String resourceName) {
 
-        return new KGateInputStream(HttpMessageStateMachineSequencerTest.class.getClassLoader().getResourceAsStream(resourceName));
+        return new DefaultInputPoint(HttpMessageStateMachineSequencerTest.class.getClassLoader().getResourceAsStream(resourceName));
 
     }
 
-    private void printRead(KGateInputStream in) throws IOException {
+    private void printRead(DefaultInputPoint in) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         in.reset();
@@ -49,7 +49,7 @@ public class HttpMessageStateMachineSequencerTest {
     }
 
 
-    private ESequencerResult read(KGateInputStream in) throws IOException {
+    private ESequencerResult read(DefaultInputPoint in) throws IOException {
 
         ESequencerResult result = null;
         int read;
@@ -64,7 +64,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMonoContentLengthMessage() throws IOException {
 
-        KGateInputStream resource = getResource("normalHttpMessage.http");
+        DefaultInputPoint resource = getResource("normalHttpMessage.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
@@ -78,7 +78,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMonoChunkedMessage() throws IOException {
 
-        KGateInputStream resource = getResource("chunkedHttpMessage.http");
+        DefaultInputPoint resource = getResource("chunkedHttpMessage.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
@@ -92,7 +92,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMonoNoBodyResponse() throws IOException {
 
-        KGateInputStream resource = getResource("204HttpResponse.http");
+        DefaultInputPoint resource = getResource("204HttpResponse.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();
@@ -106,7 +106,7 @@ public class HttpMessageStateMachineSequencerTest {
     @Test
     public void testMultipleHttpMessages() throws IOException {
 
-        KGateInputStream resource = getResource("multipleHttpMessages.http");
+        DefaultInputPoint resource = getResource("multipleHttpMessages.http");
         long start = System.currentTimeMillis();
         ESequencerResult sequencerResult = read(resource);
         long stop = System.currentTimeMillis();

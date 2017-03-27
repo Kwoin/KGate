@@ -1,7 +1,7 @@
 package com.github.kwoin.kgate.http.gateway;
 
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
-import com.github.kwoin.kgate.core.processor.chain.IChainFactory;
+import com.github.kwoin.kgate.core.gateway.chain.IChainFactory;
 import com.github.kwoin.kgate.http.processor.chain.HttpSourceToTargetChainFactory;
 
 
