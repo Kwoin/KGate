@@ -2,7 +2,7 @@ package com.github.kwoin.kgate.http.processor.command;
 
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.gateway.chain.IChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
 import com.github.kwoin.kgate.core.gateway.command.ICommand;
 import com.github.kwoin.kgate.core.gateway.socket.KGateSocket;
 

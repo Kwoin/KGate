@@ -1,11 +1,11 @@
 package com.github.kwoin.kgate.http.processor.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.sequencer.IStateMachine;
-import com.github.kwoin.kgate.core.sequencer.state.AbstractState;
-import com.github.kwoin.kgate.core.sequencer.state.ReadNBytesState;
-import com.github.kwoin.kgate.core.sequencer.state.ReadSequenceState;
-import com.github.kwoin.kgate.core.sequencer.state.ReadUntilSequenceState;
-import com.github.kwoin.kgate.core.sequencer.state.callback.IStateCallback;
+import com.github.kwoin.kgate.sequencing.sequencer.IStateMachine;
+import com.github.kwoin.kgate.sequencing.sequencer.state.AbstractState;
+import com.github.kwoin.kgate.sequencing.sequencer.state.ReadNBytesState;
+import com.github.kwoin.kgate.sequencing.sequencer.state.ReadSequenceState;
+import com.github.kwoin.kgate.sequencing.sequencer.state.ReadUntilSequenceState;
+import com.github.kwoin.kgate.sequencing.sequencer.state.callback.IStateCallback;
 import com.github.kwoin.kgate.http.processor.command.sequencer.state.callback.IsEndCallback;
 
 

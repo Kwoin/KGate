@@ -1,7 +1,7 @@
 package com.github.kwoin.kgate.smtp.processor.command.sequencer;
 
-import com.github.kwoin.kgate.core.sequencer.StateMachineSequencer;
-import com.github.kwoin.kgate.core.sequencer.state.AbstractState;
+import com.github.kwoin.kgate.sequencing.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.sequencing.sequencer.state.AbstractState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadCommandState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadDataState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadReplyState;

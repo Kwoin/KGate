@@ -12,6 +12,7 @@
         <module>kgate-http</module>
         <module>kgate-smtp</module>
         <module>kgate-default</module>
+        <module>kgate-sequencing</module>
     </modules>
 
     <name>KGate</name>

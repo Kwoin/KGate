@@ -1,10 +1,8 @@
 package com.github.kwoin.kgate.core.gateway.command;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.gateway.chain.IChain;
-import com.github.kwoin.kgate.core.gateway.socket.KGateSocket;
-
-import java.io.IOException;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 
 
 /**
@@ -13,7 +11,7 @@ import java.io.IOException;
 public interface ICommand {
 
 
-    void run(KGateSocket source, KGateSocket target, IContext context, IChain callingChain) throws IOException;
+    void run(IoPoint inputPoint, IoPoint outputPoint, IContext context, IChain callingChain) throws Exception;
 
 
 }

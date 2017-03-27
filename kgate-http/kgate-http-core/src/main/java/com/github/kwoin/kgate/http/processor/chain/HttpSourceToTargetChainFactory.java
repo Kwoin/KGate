@@ -1,17 +1,17 @@
 package com.github.kwoin.kgate.http.processor.chain;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.gateway.chain.DefaultChain;
-import com.github.kwoin.kgate.core.gateway.chain.DefaultChainFactory;
-import com.github.kwoin.kgate.core.gateway.chain.IChain;
-import com.github.kwoin.kgate.core.gateway.chain.IChainFactory;
-import com.github.kwoin.kgate.core.gateway.chain.SequencerChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChainFactory;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChainFactory;
+import com.github.kwoin.kgate.core.gateway.command.chain.SequencerChain;
 import com.github.kwoin.kgate.core.gateway.command.ICommand;
 import com.github.kwoin.kgate.core.gateway.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.gateway.command.SequencerCommand;
 import com.github.kwoin.kgate.core.gateway.command.SimpleRelayerCommand;
-import com.github.kwoin.kgate.core.sequencer.DefaultSequencerFactory;
-import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
+import com.github.kwoin.kgate.sequencing.sequencer.DefaultSequencerFactory;
+import com.github.kwoin.kgate.sequencing.sequencer.ISequencerFactory;
 import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
 import com.github.kwoin.kgate.http.processor.command.sequencer.HttpMessageStateMachineSequencer;
 

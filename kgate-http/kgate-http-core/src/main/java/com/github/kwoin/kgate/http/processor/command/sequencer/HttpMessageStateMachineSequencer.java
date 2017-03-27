@@ -2,10 +2,10 @@ package com.github.kwoin.kgate.http.processor.command.sequencer;
 
 import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.sequencer.StateMachineSequencer;
-import com.github.kwoin.kgate.core.sequencer.state.AbstractState;
-import com.github.kwoin.kgate.core.sequencer.state.ReadNBytesState;
-import com.github.kwoin.kgate.core.sequencer.state.StopState;
+import com.github.kwoin.kgate.sequencing.sequencer.StateMachineSequencer;
+import com.github.kwoin.kgate.sequencing.sequencer.state.AbstractState;
+import com.github.kwoin.kgate.sequencing.sequencer.state.ReadNBytesState;
+import com.github.kwoin.kgate.sequencing.sequencer.state.StopState;
 import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
 import com.github.kwoin.kgate.http.processor.command.sequencer.state.FinishHeaderState;
 import com.github.kwoin.kgate.http.processor.command.sequencer.state.FinishStartLineState;

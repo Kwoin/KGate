@@ -1,7 +1,7 @@
 package com.github.kwoin.kgate.smtp.processor.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.sequencer.IStateMachine;
-import com.github.kwoin.kgate.core.sequencer.state.ReadUntilSequenceState;
+import com.github.kwoin.kgate.sequencing.sequencer.IStateMachine;
+import com.github.kwoin.kgate.sequencing.sequencer.state.ReadUntilSequenceState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.callback.InterpretReplyCallback;
 
 

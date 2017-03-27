@@ -2,9 +2,9 @@ package com.github.kwoin.kgate.smtp.gateway;
 
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.gateway.DefaultGateway;
-import com.github.kwoin.kgate.core.gateway.chain.IChain;
-import com.github.kwoin.kgate.core.gateway.chain.IChainFactory;
-import com.github.kwoin.kgate.core.gateway.chain.SequencerChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChainFactory;
+import com.github.kwoin.kgate.core.gateway.command.chain.SequencerChain;
 import com.github.kwoin.kgate.core.gateway.command.SequencerCommand;
 
 

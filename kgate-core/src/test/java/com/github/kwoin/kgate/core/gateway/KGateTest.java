@@ -3,9 +3,9 @@ package com.github.kwoin.kgate.core.gateway;
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
-import com.github.kwoin.kgate.core.gateway.chain.DefaultChain;
-import com.github.kwoin.kgate.core.gateway.chain.IChain;
-import com.github.kwoin.kgate.core.gateway.chain.IChainFactory;
+import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
+import com.github.kwoin.kgate.core.gateway.command.chain.IChainFactory;
 import com.github.kwoin.kgate.core.gateway.command.ICommand;
 import com.github.kwoin.kgate.core.gateway.command.ICommandListFactory;
 import com.github.kwoin.kgate.core.gateway.socket.KGateSocket;
@@ -102,7 +102,7 @@ public class KGateTest {
 
         IGateway gateway = new DefaultGateway();
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
-        //input.setSoTimeout(1000);
+        //io.setSoTimeout(1000);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

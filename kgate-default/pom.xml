@@ -17,6 +17,11 @@
             <artifactId>kgate-core</artifactId>
             <version>${version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.kwoin.kgate</groupId>
+            <artifactId>kgate-sequencing</artifactId>
+            <version>${version}</version>
+        </dependency>
     </dependencies>
 
 
