@@ -5,8 +5,8 @@ import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
 import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.gateway.io.KGateInputStream;
-import com.github.kwoin.kgate.sequencing.ESequencerResult;
-import com.github.kwoin.kgate.sequencing.ISequencer;
+import com.github.kwoin.kgate.core.sequencing.ESequencerResult;
+import com.github.kwoin.kgate.core.sequencing.ISequencer;
 
 
 /**
@@ -47,12 +47,13 @@ public class SequencerCommand implements ICommand {
                        : sequencerKGateComponentFactory.onUnhandledMessage(context);
                chain.run(inputPoint, outputPoint, messageContext, callingChain);
                in.clear();
+               sequencer.init(context);
            }
 
         }
 
-//        in.reset();
-//        onUnhandledChainFactory.newChain(context).run(inputPoint, outputPoint, context, callingChain);
+        in.reset();
+        sequencerKGateComponentFactory.onUnhandledMessage(context).run(inputPoint, outputPoint, context, callingChain);
 
     }
 

@@ -3,26 +3,28 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>kgate</artifactId>
-        <groupId>com.github.kwoin.kgate</groupId>
+        <artifactId>kgate-smtp</artifactId>
+        <groupId>com.github.kwoin.kgate.protocols.smtp</groupId>
         <version>1.0.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kgate-sequencing</artifactId>
+    <artifactId>kgate-smtp-core</artifactId>
 
     <dependencies>
+
         <dependency>
             <groupId>com.github.kwoin.kgate</groupId>
             <artifactId>kgate-core</artifactId>
             <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.kwoin.kgate</groupId>
-            <artifactId>kgate-default</artifactId>
-            <version>${version}</version>
-        </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 </project>
