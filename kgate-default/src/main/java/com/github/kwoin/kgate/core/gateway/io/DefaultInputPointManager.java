@@ -4,6 +4,8 @@ import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.context.DefaultContext;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
+import com.github.kwoin.kgate.core.factory.IGatewayFactorySet;
+import com.github.kwoin.kgate.core.factory.IInputPointManagerComponentsFactory;
 import com.github.kwoin.kgate.core.gateway.processor.IProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +29,10 @@ public class DefaultInputPointManager implements InputPointManager {
 
     private final Logger logger = LoggerFactory.getLogger(DefaultInputPointManager.class);
 
-    protected IInputPointManagerComponentsFactory inputPointManagerComponentsFactory;
     protected ServerSocket serverSocket;
     protected ExecutorService threadPool;
     protected boolean isStopped;
-
-
-    public DefaultInputPointManager(IInputPointManagerComponentsFactory inputPointManagerComponentsFactory) {
-
-        this.inputPointManagerComponentsFactory = inputPointManagerComponentsFactory;
-
-    }
+    protected IGatewayFactorySet gatewayFactorySet;
 
 
     @Override
@@ -128,10 +123,12 @@ public class DefaultInputPointManager implements InputPointManager {
 
                     IContext sessionContext = new DefaultContext(IContext.ECoreScope.SESSION, context);
 
+                    IInputPointManagerComponentsFactory inputPointManagerComponentsFactory = gatewayFactorySet.getInputPointManagerComponentsFactory();
                     IoPoint ioPoint = inputPointManagerComponentsFactory.newInputPoint(sessionContext, source);
                     IoPoint outputPoint = inputPointManagerComponentsFactory.newOutputPoint(sessionContext);
 
                     IProcessor processor = inputPointManagerComponentsFactory.newProcessor(sessionContext);
+                    processor.setGatewayFactorySet(gatewayFactorySet);
                     processor.process(ioPoint, outputPoint, sessionContext);
 
                 } catch (IOException|NoSuchElementException e) {
@@ -141,6 +138,22 @@ public class DefaultInputPointManager implements InputPointManager {
 
         });
 
+
+    }
+
+
+    @Override
+    public void setGatewayFactorySet(IGatewayFactorySet gatewayFactorySet) {
+
+        this.gatewayFactorySet = gatewayFactorySet;
+
+    }
+
+
+    @Override
+    public IGatewayFactorySet getGatewayFactorySet() {
+
+        return gatewayFactorySet;
 
     }
 }

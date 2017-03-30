@@ -32,6 +32,7 @@ public abstract class AbstractState<T extends IStateMachine> {
 
     }
 
+
     protected byte[] getBuffer() {
 
         return baos.toByteArray();
@@ -42,6 +43,13 @@ public abstract class AbstractState<T extends IStateMachine> {
     public void reset() {
 
         baos.reset();
+
+    }
+
+
+    public T getStateMachine() {
+
+        return stateMachine;
 
     }
 

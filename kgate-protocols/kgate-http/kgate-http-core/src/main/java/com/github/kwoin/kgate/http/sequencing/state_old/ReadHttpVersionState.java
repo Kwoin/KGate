@@ -50,6 +50,14 @@ public class ReadHttpVersionState extends AbstractState implements IStateMachine
 
 
     @Override
+    public AbstractState[] getStates() {
+
+        return states;
+
+    }
+
+
+    @Override
     public int push(byte b) {
 
         int result = states[currentStateIndex].push(b);

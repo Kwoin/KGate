@@ -1,6 +1,7 @@
 package com.github.kwoin.kgate.core.sequencing;
 
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,8 @@ public class CompositeSequencer implements ISequencer {
 
     private List<ISequencer> sequencersComponents;
     private List<ISequencer> copy;
+    private IContext context;
+    private IoPoint inputPoint;
 
 
     public CompositeSequencer() {
@@ -35,12 +38,42 @@ public class CompositeSequencer implements ISequencer {
 
 
     @Override
-    public void init(IContext context) {
+    public void init(IContext context, IoPoint inputPoint) {
+
+        this.context = context;
+        this.inputPoint = inputPoint;
 
         Collections.copy(copy, sequencersComponents);
 
         for (ISequencer sequencersComponent : sequencersComponents)
-            sequencersComponent.init(context);
+            sequencersComponent.init(context, inputPoint);
+
+    }
+
+
+    @Override
+    public void reset() {
+
+        Collections.copy(copy, sequencersComponents);
+
+        for (ISequencer sequencersComponent : sequencersComponents)
+            sequencersComponent.reset();
+
+    }
+
+
+    @Override
+    public IContext getContext() {
+
+        return context;
+
+    }
+
+
+    @Override
+    public IoPoint getInputPoint() {
+
+        return inputPoint;
 
     }
 

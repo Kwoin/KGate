@@ -3,11 +3,10 @@ package com.github.kwoin.kgate.core.sequencing;
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
-import com.github.kwoin.kgate.core.gateway.DefaultGateway;
-import com.github.kwoin.kgate.core.gateway.IGateway;
-import com.github.kwoin.kgate.core.gateway.SequencerKGateComponentsFactory;
+import com.github.kwoin.kgate.core.factory.ISequencerCommandComponentsFactory;
+import com.github.kwoin.kgate.core.gateway.DefaultSequencerGateway;
+import com.github.kwoin.kgate.core.gateway.ISequencerGateway;
 import com.github.kwoin.kgate.core.gateway.command.ICommand;
-import com.github.kwoin.kgate.core.gateway.command.SequencerCommand;
 import com.github.kwoin.kgate.core.gateway.command.SimpleLoggerCommand;
 import com.github.kwoin.kgate.core.gateway.command.SimpleRelayerCommand;
 import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChain;
@@ -33,41 +32,13 @@ public class SequencerTest {
     public void testSequencer() throws IOException, KGateServerException, InterruptedException {
 
 
-        SequencerKGateComponentsFactory kGateComponentsFactory = new SequencerKGateComponentsFactory(MockSequencer.class, null) {
+//        ISequencerGatewayFactorySet gatewayFactorySet = new DefaultSequencerGatewayFactorySet();
+//        gatewayFactorySet.getProcessorComponentsFactory().setRequestSequencerCommandComponentsFactory(new MockSequencerCommandComponentsFactory());
 
-            @Override
-            public IChain newRequestChain(IContext context) {
+//        IGateway gateway = new DefaultGateway(gatewayFactorySet);
 
-                return new DefaultChain(new SequencerCommand(this, new MockSequencer()));
-
-            }
-
-
-            @Override
-            public IChain onNewMessage(IContext context) {
-
-                return new DefaultChain(
-                        new SimpleLoggerCommand("new Message"),
-                        new SaveInContextCommand("test.newMessage"),
-                        new SimpleRelayerCommand()
-                );
-
-            }
-
-            @Override
-            public IChain onUnhandledMessage(IContext context) {
-
-                return new DefaultChain(
-                        new SimpleLoggerCommand("Unhandled Message"),
-                        new SaveInContextCommand("test.unhandledMessage"),
-                        new SimpleRelayerCommand()
-                );
-
-            }
-
-        };
-
-        IGateway gateway = new DefaultGateway(kGateComponentsFactory);
+        ISequencerGateway gateway = new DefaultSequencerGateway();
+        gateway.getGatewayFactorySet().getProcessorComponentsFactory().setRequestSequencerCommandComponentsFactory(new MockSequencerCommandComponentsFactory());
 
         ServerSocket server = new ServerSocket(KGateConfig.getConfig().getInt("kgate.core.client.port"));
         server.setSoTimeout(1000);
@@ -102,8 +73,45 @@ public class SequencerTest {
         server.close();
         source.close();
 
-        assertEquals("AAA@", gateway.getContext().getVariable(IContext.ECoreScope.APPLICATION, "test.newMessage"));
+        assertEquals("|", gateway.getContext().getVariable(IContext.ECoreScope.APPLICATION, "test.newMessage"));
         assertEquals("!", gateway.getContext().getVariable(IContext.ECoreScope.APPLICATION, "test.unhandledMessage"));
+
+    }
+
+
+    class MockSequencerCommandComponentsFactory implements ISequencerCommandComponentsFactory {
+
+
+        @Override
+        public ISequencer newSequencer(IContext context) {
+
+            return new MockSequencer();
+
+        }
+
+
+        @Override
+        public IChain onNewMessage(IContext context) {
+
+            return new DefaultChain(
+                    new SimpleLoggerCommand("new Message"),
+                    new SaveInContextCommand("test.newMessage"),
+                    new SimpleRelayerCommand()
+            );
+
+        }
+
+
+        @Override
+        public IChain onUnhandledMessage(IContext context) {
+
+            return new DefaultChain(
+                    new SimpleLoggerCommand("Unhandled Message"),
+                    new SaveInContextCommand("test.unhandledMessage"),
+                    new SimpleRelayerCommand()
+            );
+
+        }
 
     }
 
@@ -112,8 +120,28 @@ public class SequencerTest {
 
 
         @Override
-        public void init(IContext context) {
+        public void init(IContext context, IoPoint ioPoint) {
 
+        }
+
+
+        @Override
+        public void reset() {
+
+        }
+
+
+        @Override
+        public IContext getContext() {
+
+            return null;
+        }
+
+
+        @Override
+        public IoPoint getInputPoint() {
+
+            return null;
         }
 
 

@@ -1,6 +1,7 @@
-package com.github.kwoin.kgate.core.gateway.io;
+package com.github.kwoin.kgate.core.factory;
 
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.gateway.processor.IProcessor;
 
 import java.io.Closeable;

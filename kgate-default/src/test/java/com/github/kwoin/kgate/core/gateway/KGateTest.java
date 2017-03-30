@@ -2,6 +2,9 @@ package com.github.kwoin.kgate.core.gateway;
 
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.ex.KGateServerException;
+import com.github.kwoin.kgate.core.factory.DefaultGatewayFactorySet;
+import com.github.kwoin.kgate.core.factory.DefaultProcessorComponentsFactory;
+import com.github.kwoin.kgate.core.factory.IGatewayFactorySet;
 import com.github.kwoin.kgate.core.gateway.command.ICommand;
 import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChain;
 import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
@@ -34,7 +37,9 @@ public class KGateTest {
     @Test
     public void test() throws IOException, KGateServerException {
 
-        DefaultKGateComponentsFactory defaultKGateComponentsFactory = new DefaultKGateComponentsFactory() {
+        IGatewayFactorySet gatewayFactorySet = new DefaultGatewayFactorySet();
+
+        gatewayFactorySet.setProcessorComponentsFactory( new DefaultProcessorComponentsFactory() {
 
             @Override
             public IChain newRequestChain(IContext context) {
@@ -62,9 +67,9 @@ public class KGateTest {
                 });
             }
 
-        };
+        });
 
-        IGateway gateway = new DefaultGateway(defaultKGateComponentsFactory);
+        IGateway gateway = new DefaultGateway(gatewayFactorySet);
 
         ServerSocket serverSocket = new ServerSocket(7072);
 

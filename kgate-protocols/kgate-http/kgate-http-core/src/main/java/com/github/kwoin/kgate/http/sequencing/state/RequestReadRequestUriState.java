@@ -15,7 +15,7 @@ public class RequestReadRequestUriState extends ReadUntilSequenceState<HttpReque
 
         super(stateMachine,
                 " ".getBytes(),
-                null,
+                "\r".getBytes(),
                 new RequestReadRequestUriCallback(),
                 null,
                 true);

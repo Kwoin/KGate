@@ -1,10 +1,11 @@
 package com.github.kwoin.kgate.core.gateway.command;
 
 import com.github.kwoin.kgate.core.context.DefaultContext;
+import com.github.kwoin.kgate.core.context.ESequencerScope;
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.factory.ISequencerCommandComponentsFactory;
 import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
 import com.github.kwoin.kgate.core.gateway.io.IoPoint;
-import com.github.kwoin.kgate.core.gateway.io.KGateInputStream;
 import com.github.kwoin.kgate.core.sequencing.ESequencerResult;
 import com.github.kwoin.kgate.core.sequencing.ISequencer;
 
@@ -15,14 +16,12 @@ import com.github.kwoin.kgate.core.sequencing.ISequencer;
 public class SequencerCommand implements ICommand {
 
 
-    protected ISequencerComponentsFactory sequencerKGateComponentFactory;
-    protected ISequencer sequencer;
+    protected ISequencerCommandComponentsFactory sequencerCommandComponentsFactory;
 
 
-    public SequencerCommand(ISequencerComponentsFactory sequencerKGateComponentFactory, ISequencer sequencer) {
+    public SequencerCommand(ISequencerCommandComponentsFactory sequencerCommandComponentsFactory) {
 
-        this.sequencerKGateComponentFactory = sequencerKGateComponentFactory;
-        this.sequencer = sequencer;
+        this.sequencerCommandComponentsFactory = sequencerCommandComponentsFactory;
 
     }
 
@@ -30,30 +29,37 @@ public class SequencerCommand implements ICommand {
     @Override
     public void run(IoPoint inputPoint, IoPoint outputPoint, IContext context, IChain callingChain) throws Exception {
 
-        sequencer.init(context);
+        IContext messageContext = new DefaultContext(IContext.ECoreScope.MESSAGE, context);
+        IContext sequencerContext = new DefaultContext(ESequencerScope.SEQUENCER, messageContext);
+        ISequencer sequencer = sequencerCommandComponentsFactory.newSequencer(context);
+        sequencer.init(sequencerContext, inputPoint);
 
-        KGateInputStream in = ((KGateInputStream) inputPoint.getInputStream());
+        ESequencerResult result;
+        int read;
+        do {
 
-        int i;
-        while((i = in.read()) != -1) {
+            read = inputPoint.getInputStream().read();
+            result = sequencer.push((byte) read);
 
-           ESequencerResult result = sequencer.push((byte) i);
+            if(result != ESequencerResult.CONTINUE) {
+                inputPoint.getInputStream().reset();
+                IChain chain = result == ESequencerResult.CUT
+                        ? sequencerCommandComponentsFactory.onNewMessage(messageContext)
+                        : sequencerCommandComponentsFactory.onUnhandledMessage(messageContext);
+                chain.run(inputPoint, outputPoint, messageContext, callingChain);
+                inputPoint.getInputStream().clear();
+                sequencer.reset();
+            }
 
-           if(result != ESequencerResult.CONTINUE) {
-               IContext messageContext = new DefaultContext(IContext.ECoreScope.MESSAGE, context);
-               in.reset();
-               IChain chain = result == ESequencerResult.STOP
-                       ? sequencerKGateComponentFactory.onNewMessage(context)
-                       : sequencerKGateComponentFactory.onUnhandledMessage(context);
-               chain.run(inputPoint, outputPoint, messageContext, callingChain);
-               in.clear();
-               sequencer.init(context);
-           }
+        } while (read != -1);
+
+        // Stream ended prematuraly, data was still expected
+        if(result == ESequencerResult.CONTINUE) {
+
+            inputPoint.getInputStream().reset();
+            sequencerCommandComponentsFactory.onUnhandledMessage(context).run(inputPoint, outputPoint, messageContext, callingChain);
 
         }
-
-        in.reset();
-        sequencerKGateComponentFactory.onUnhandledMessage(context).run(inputPoint, outputPoint, context, callingChain);
 
     }
 

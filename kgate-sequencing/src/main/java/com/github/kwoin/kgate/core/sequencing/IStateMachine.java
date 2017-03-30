@@ -1,5 +1,8 @@
 package com.github.kwoin.kgate.core.sequencing;
 
+import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
+
+
 /**
  * @author P. WILLEMET
  */
@@ -11,6 +14,8 @@ public interface IStateMachine {
     int getCurrentStateIndex();
 
     void setCurrentStateIndex(int currentStateIndex);
+
+    AbstractState[] getStates();
 
 
 }

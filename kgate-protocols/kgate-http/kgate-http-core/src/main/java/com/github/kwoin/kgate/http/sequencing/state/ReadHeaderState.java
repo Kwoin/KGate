@@ -1,12 +1,9 @@
 package com.github.kwoin.kgate.http.sequencing.state;
 
 
-import com.github.kwoin.kgate.core.sequencing.state.CompositeState;
-import com.github.kwoin.kgate.core.sequencing.state.ReadSequenceState;
 import com.github.kwoin.kgate.core.sequencing.state.ReadUntilSequenceState;
-import com.github.kwoin.kgate.core.sequencing.state.callback.SwitchStateCallback;
 import com.github.kwoin.kgate.http.sequencing.HttpMessageSequencer;
-import com.github.kwoin.kgate.http.sequencing.HttpMessageStateMachineSequencer;
+import com.github.kwoin.kgate.http.sequencing.callback.ReadHeaderCallback;
 
 
 /**
@@ -20,7 +17,7 @@ public class ReadHeaderState extends ReadUntilSequenceState<HttpMessageSequencer
         super(stateMachine,
                 "\r\n".getBytes(),
                 null,
-                new ReadHeaderCallback<HttpMessageSequencer>(),
+                new ReadHeaderCallback(),
                 null,
                 true);
 

@@ -1,18 +1,12 @@
-package com.github.kwoin.kgate.core.gateway;
+package com.github.kwoin.kgate.core.factory;
 
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.core.gateway.command.SimpleRelayerCommand;
-import com.github.kwoin.kgate.core.gateway.command.chain.DefaultChain;
-import com.github.kwoin.kgate.core.gateway.command.chain.IChain;
-import com.github.kwoin.kgate.core.gateway.io.DefaultInputPointManager;
-import com.github.kwoin.kgate.core.gateway.io.IInputPointManagerComponentsFactory;
-import com.github.kwoin.kgate.core.gateway.io.InputPointManager;
+import com.github.kwoin.kgate.core.factory.IInputPointManagerComponentsFactory;
 import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.gateway.io.SocketPoint;
 import com.github.kwoin.kgate.core.gateway.processor.DefaultProcessor;
 import com.github.kwoin.kgate.core.gateway.processor.IProcessor;
-import com.github.kwoin.kgate.core.gateway.processor.IProcessorComponentsFactory;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -30,15 +24,7 @@ import java.security.cert.X509Certificate;
 /**
  * @author P. WILLEMET
  */
-public class DefaultKGateComponentsFactory implements IGatewayComponentsFactory, IInputPointManagerComponentsFactory<Socket>, IProcessorComponentsFactory {
-
-
-    @Override
-    public InputPointManager newInputPointManager(IContext context) {
-
-        return new DefaultInputPointManager(this);
-
-    }
+public class DefaultInputPointManagerComponentFactory implements IInputPointManagerComponentsFactory<Socket> {
 
 
     @Override
@@ -102,23 +88,8 @@ public class DefaultKGateComponentsFactory implements IGatewayComponentsFactory,
     @Override
     public IProcessor newProcessor(IContext context) {
 
-        return new DefaultProcessor(this);
+        return new DefaultProcessor();
 
     }
 
-
-    @Override
-    public IChain newRequestChain(IContext context) {
-
-        return new DefaultChain(new SimpleRelayerCommand());
-
-    }
-
-
-    @Override
-    public IChain newResponseChain(IContext context) {
-
-        return new DefaultChain(new SimpleRelayerCommand());
-
-    }
 }

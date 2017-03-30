@@ -1,6 +1,7 @@
 package com.github.kwoin.kgate.core.sequencing;
 
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 
 
 /**
@@ -8,7 +9,13 @@ import com.github.kwoin.kgate.core.context.IContext;
  */
 public interface ISequencer {
 
-    void init(IContext context);
+    void init(IContext context, IoPoint inputPoint);
+
+    void reset();
+
+    IContext getContext();
+
+    IoPoint getInputPoint();
 
     ESequencerResult push(byte b);
 

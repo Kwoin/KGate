@@ -1,5 +1,8 @@
 package com.github.kwoin.kgate.http.model;
 
+import java.util.Map;
+
+
 /**
  * @author P. WILLEMET
  */
@@ -43,6 +46,29 @@ public class HttpRequest extends HttpMessage {
     public void setRequestUri(String requestUri) {
 
         this.requestUri = requestUri;
+
+    }
+
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder()
+                .append(method)
+                .append(" ")
+                .append(requestUri)
+                .append(" ")
+                .append(httpVersion)
+                .append("\r\n");
+        for (Map.Entry<String, String> entry : headers.entrySet())
+            sb.append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append("\r\n");
+        sb.append("\r\n")
+                .append(body);
+
+        return sb.toString();
 
     }
 

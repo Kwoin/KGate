@@ -1,12 +1,11 @@
 package com.github.kwoin.kgate.http.sequencing;
 
-import com.github.kwoin.kgate.core.context.EDirection;
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.sequencing.StateMachineSequencer;
 import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
 import com.github.kwoin.kgate.core.sequencing.state.ReadNBytesState;
 import com.github.kwoin.kgate.core.sequencing.state.StopState;
-import com.github.kwoin.kgate.http.processor.command.HttpReadRequestMethodCommand;
 import com.github.kwoin.kgate.http.sequencing.state_old.FinishHeaderState;
 import com.github.kwoin.kgate.http.sequencing.state_old.FinishStartLineState;
 import com.github.kwoin.kgate.http.sequencing.state_old.NoBodyState;
@@ -21,6 +20,7 @@ import com.github.kwoin.kgate.http.sequencing.state_old.ReadTransferEncodingStat
 /**
  * @author P. WILLEMET
  */
+// TODO 29/03/2017 - PWL : REMOVE ME!
 public class HttpMessageStateMachineSequencer extends StateMachineSequencer {
 
 
@@ -46,12 +46,14 @@ public class HttpMessageStateMachineSequencer extends StateMachineSequencer {
 
 
     @Override
-    public void init(IContext context)  {
+    public void init(IContext context, IoPoint inputPoint)  {
 
-        super.init(context);
+        super.init(context, inputPoint);
+        /*
         if(context.getVariable(IContext.ECoreScope.SESSION, EDirection.DIRECTION_FIELD) == EDirection.RESPONSE
                 && context.getVariable(IContext.ECoreScope.SESSION, HttpReadRequestMethodCommand.REQUEST_METHOD_FIELD).equals("HEAD"))
             currentStateIndex = 2;
+            */
 
     }
 

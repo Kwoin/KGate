@@ -1,5 +1,6 @@
 package com.github.kwoin.kgate.http.model;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,19 @@ public abstract class HttpMessage {
     }
 
 
+    @Nullable
+    public String getHeaderValue(String headerKey) {
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            if(entry.getKey().equalsIgnoreCase(headerKey))
+                return entry.getValue();
+        }
+
+        return null;
+
+    }
+
+
     public String getBody() {
 
         return body;
@@ -56,4 +70,6 @@ public abstract class HttpMessage {
         this.httpVersion = httpVersion;
 
     }
+
+
 }

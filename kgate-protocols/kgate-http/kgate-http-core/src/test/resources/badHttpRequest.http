@@ -1,0 +1,20 @@
+POST /cgi-bin/process.cgi HTTP/1.1
+User-Agent: Mozilla/4.0
+Host: www.tutorialspoint.com
+Content-Type: application/x-www-form-urlencoded
+Transfer-Encoding: chunked
+Accept-Language: en-us
+Accept-Encoding: gzip, deflate
+Connection: Keep-Alive
+
+4
+kwoi
+1sd
+n
+2
+
+
+6
+kwoin.
+0
+

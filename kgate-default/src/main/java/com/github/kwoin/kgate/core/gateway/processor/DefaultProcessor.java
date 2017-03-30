@@ -1,6 +1,7 @@
 package com.github.kwoin.kgate.core.gateway.processor;
 
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.factory.IGatewayFactorySet;
 import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,14 +16,7 @@ public class DefaultProcessor implements IProcessor {
 
 
     private final Logger logger = LoggerFactory.getLogger(DefaultProcessor.class);
-    protected IProcessorComponentsFactory processorComponentsFactory;
-
-
-    public DefaultProcessor(IProcessorComponentsFactory processorComponentsFactory) {
-
-        this.processorComponentsFactory = processorComponentsFactory;
-
-    }
+    protected IGatewayFactorySet gatewayFactorySet;
 
 
     @Override
@@ -35,7 +29,7 @@ public class DefaultProcessor implements IProcessor {
             public void run() {
 
                 try {
-                    processorComponentsFactory.newRequestChain(context).run(inputPoint, outputPoint, context, null);
+                    gatewayFactorySet.getProcessorComponentsFactory().newRequestChain(context).run(inputPoint, outputPoint, context, null);
                 } catch (Exception e) {
                     handleChainException(e, inputPoint, outputPoint);
                 }
@@ -47,7 +41,7 @@ public class DefaultProcessor implements IProcessor {
             public void run() {
 
                 try {
-                    processorComponentsFactory.newResponseChain(context).run(outputPoint, inputPoint, context, null);
+                    gatewayFactorySet.getProcessorComponentsFactory().newResponseChain(context).run(outputPoint, inputPoint, context, null);
                 } catch (Exception e) {
                     handleChainException(e, inputPoint, outputPoint);
                 }
@@ -87,4 +81,18 @@ public class DefaultProcessor implements IProcessor {
     }
 
 
+    @Override
+    public void setGatewayFactorySet(IGatewayFactorySet gatewayFactorySet) {
+
+        this.gatewayFactorySet = gatewayFactorySet;
+
+    }
+
+
+    @Override
+    public IGatewayFactorySet getGatewayFactorySet() {
+
+        return gatewayFactorySet;
+
+    }
 }

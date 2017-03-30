@@ -1,6 +1,7 @@
 package com.github.kwoin.kgate.core.sequencing;
 
 import com.github.kwoin.kgate.core.context.IContext;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
 
 
@@ -13,6 +14,7 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
     protected AbstractState[] states;
     protected int currentStateIndex;
     protected IContext context;
+    protected IoPoint inputPoint;
 
 
     public StateMachineSequencer() {
@@ -23,12 +25,10 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
 
 
     @Override
-    public void init(IContext context) {
+    public void init(IContext context, IoPoint inputPoint) {
 
-        currentStateIndex = 0;
         this.context = context;
-        for (AbstractState state : states)
-            state.reset();
+        this.inputPoint = inputPoint;
 
     }
 
@@ -61,6 +61,40 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
     public void setCurrentStateIndex(int currentStateIndex) {
 
         this.currentStateIndex = currentStateIndex;
+
+    }
+
+
+    @Override
+    public AbstractState[] getStates() {
+
+        return states;
+
+    }
+
+
+    @Override
+    public IContext getContext() {
+
+        return context;
+
+    }
+
+
+    @Override
+    public IoPoint getInputPoint() {
+
+        return inputPoint;
+
+    }
+
+
+    @Override
+    public void reset() {
+
+        currentStateIndex = 0;
+        for (AbstractState state : states)
+            state.reset();
 
     }
 
