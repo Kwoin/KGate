@@ -1,6 +1,6 @@
 package com.github.kwoin.kgate.smtp.processor.command.sequencer.state;
 
-import com.github.kwoin.kgate.core.sequencing.state.ReadUntilSequenceState;
+import com.github.kwoin.kgate.core.sequencing.state.ReadNBytesState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.SmtpResponseSequencer;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.callback.ReadStatusCodeCallback;
 
@@ -8,16 +8,14 @@ import com.github.kwoin.kgate.smtp.processor.command.sequencer.callback.ReadStat
 /**
  * @author P. WILLEMET
  */
-public class ReadStatusCodeState extends ReadUntilSequenceState<SmtpResponseSequencer> {
+public class ReadStatusCodeState extends ReadNBytesState<SmtpResponseSequencer> {
 
 
     public ReadStatusCodeState(SmtpResponseSequencer stateMachine) {
 
         super(stateMachine,
-                " ".getBytes(),
-                null,
+                4,
                 new ReadStatusCodeCallback(),
-                null,
                 true);
 
     }
