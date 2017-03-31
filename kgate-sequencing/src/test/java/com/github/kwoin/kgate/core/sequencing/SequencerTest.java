@@ -31,12 +31,6 @@ public class SequencerTest {
     @Test
     public void testSequencer() throws IOException, KGateServerException, InterruptedException {
 
-
-//        ISequencerGatewayFactorySet gatewayFactorySet = new DefaultSequencerGatewayFactorySet();
-//        gatewayFactorySet.getProcessorComponentsFactory().setRequestSequencerCommandComponentsFactory(new MockSequencerCommandComponentsFactory());
-
-//        IGateway gateway = new DefaultGateway(gatewayFactorySet);
-
         ISequencerGateway gateway = new DefaultSequencerGateway();
         gateway.getGatewayFactorySet().getProcessorComponentsFactory().setRequestSequencerCommandComponentsFactory(new MockSequencerCommandComponentsFactory());
 
@@ -49,7 +43,7 @@ public class SequencerTest {
                 try {
                     Socket target = server.accept();
                     int i;
-                    while((i = target.getInputStream().read()) != '!')
+                    while((i = target.getInputStream().read()) != -1)
                         System.out.println(Character.valueOf((char)i));
                     System.out.println(Character.valueOf((char)i));
                     target.close();
@@ -74,7 +68,7 @@ public class SequencerTest {
         source.close();
 
         assertEquals("|", gateway.getContext().getVariable(IContext.ECoreScope.APPLICATION, "test.newMessage"));
-        assertEquals("!", gateway.getContext().getVariable(IContext.ECoreScope.APPLICATION, "test.unhandledMessage"));
+        assertEquals("AAA@", gateway.getContext().getVariable(IContext.ECoreScope.APPLICATION, "test.unhandledMessage"));
 
     }
 

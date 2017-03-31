@@ -1,55 +1,43 @@
 package com.github.kwoin.kgate.smtp.processor.command.sequencer;
 
 import com.github.kwoin.kgate.core.context.IContext;
-import com.github.kwoin.kgate.sequencing.sequencer.ESequencerResult;
-import com.github.kwoin.kgate.sequencing.sequencer.ISequencer;
+import com.github.kwoin.kgate.core.gateway.io.IoPoint;
+import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
+import com.github.kwoin.kgate.smtp.model.SmtpRequest;
+import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadCommandState;
+import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadCommandValueState;
+import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadDataState;
 
 
 /**
  * @author P. WILLEMET
  */
-public class SmtpRequestSequencer implements ISequencer {
+public class SmtpRequestSequencer extends SmtpMessageSequencer<SmtpRequest> {
 
 
-    private static final byte[] REQUEST_END = "\r\n".getBytes();
-    private static final byte[] DATA_END = "\r\n.\r\n".getBytes();
-
-    private byte[] endSequence;
-    private int cursor;
-    private IContext context;
-
+    public static final int READ_COMMAND = 0;
+    public static final int READ_COMMAND_VALUE = 1;
+    public static final int READ_DATA = 2;
 
 
     @Override
-    public void start(IContext context) {
+    public AbstractState[] initializeStates() {
 
-        this.context = context;
-        cursor = 0;
-        endSequence = (Integer) context.getVariable(IContext.ECoreScope.SESSION, "kgate.smtp.sequencer.status") == 1
-                ? DATA_END
-                : REQUEST_END;
+        return new AbstractState[] {
+                new ReadCommandState(this),
+                new ReadCommandValueState(this),
+                new ReadDataState(this)
+        };
 
     }
 
 
     @Override
-    public ESequencerResult push(byte b) {
+    public void init(IContext context, IoPoint inputPoint) {
 
-        ESequencerResult result = ESequencerResult.CONTINUE;
+        super.init(context, inputPoint);
 
-        if(b == endSequence[cursor])
-            cursor++;
-
-        if(cursor == endSequence.length) {
-
-            if(endSequence == DATA_END)
-                context.setVariable(IContext.ECoreScope.SESSION, "kgate.smtp.sequencer.status", 3);
-
-            result = ESequencerResult.CUT;
-
-        }
-
-        return result;
+        smtpMessage = new SmtpRequest();
 
     }
 
@@ -57,5 +45,11 @@ public class SmtpRequestSequencer implements ISequencer {
     @Override
     public void reset() {
 
+        if(!(smtpMessage.getCommand().equals("DATA") && smtpMessage.getCommandValue().length() == 0)) {
+            super.reset();
+            smtpMessage = new SmtpRequest();
+        }
+
     }
+
 }

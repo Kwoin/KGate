@@ -2,23 +2,22 @@ package com.github.kwoin.kgate.smtp.processor.command.sequencer.state;
 
 import com.github.kwoin.kgate.core.sequencing.state.ReadUntilSequenceState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.SmtpRequestSequencer;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.callback.ReadCommandCallback;
+import com.github.kwoin.kgate.smtp.processor.command.sequencer.callback.ReadCommandValueCallback;
 
 
 /**
  * @author P. WILLEMET
  */
-public class ReadCommandState extends ReadUntilSequenceState<SmtpRequestSequencer> {
+public class ReadCommandValueState extends ReadUntilSequenceState<SmtpRequestSequencer> {
 
 
-    public ReadCommandState(SmtpRequestSequencer stateMachine) {
+    public ReadCommandValueState(SmtpRequestSequencer stateMachine) {
 
         super(stateMachine,
-                " ".getBytes(),
+                "\r\n".getBytes(),
                 null,
-                new ReadCommandCallback(),
+                new ReadCommandValueCallback(),
                 null,
                 true);
-
     }
 }

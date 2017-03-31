@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>com.github.kwoin.kgate</groupId>
-            <artifactId>kgate-core</artifactId>
+            <artifactId>kgate-sequencing</artifactId>
             <version>${version}</version>
         </dependency>
 

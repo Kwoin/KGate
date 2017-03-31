@@ -36,13 +36,14 @@ public abstract class StateMachineSequencer implements ISequencer, IStateMachine
     @Override
     public ESequencerResult push(byte b) {
 
-        currentStateIndex = states[currentStateIndex].push(b);
-        switch(currentStateIndex) {
+        int result = states[currentStateIndex].push(b);
+        switch(result) {
             case CUT:
                 return ESequencerResult.CUT;
             case STOP:
                 return ESequencerResult.STOP;
             default:
+                currentStateIndex = result;
                 return ESequencerResult.CONTINUE;
         }
 

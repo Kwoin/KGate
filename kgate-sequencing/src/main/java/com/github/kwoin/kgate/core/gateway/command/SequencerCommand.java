@@ -54,12 +54,15 @@ public class SequencerCommand implements ICommand {
         } while (read != -1);
 
         // Stream ended prematuraly, data was still expected
+        /*
         if(result == ESequencerResult.CONTINUE) {
 
             inputPoint.getInputStream().reset();
             sequencerCommandComponentsFactory.onUnhandledMessage(context).run(inputPoint, outputPoint, messageContext, callingChain);
 
-        }
+        }*/
+
+        outputPoint.close();
 
     }
 
