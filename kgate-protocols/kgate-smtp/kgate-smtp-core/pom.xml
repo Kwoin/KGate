@@ -3,7 +3,7 @@
     <parent>
         <artifactId>kgate-smtp</artifactId>
         <groupId>com.github.kwoin.kgate.protocols.smtp</groupId>
-        <version>1.0.8-SNAPSHOT</version>
+        <version>1.0.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
