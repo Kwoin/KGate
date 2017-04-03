@@ -16,14 +16,16 @@ public class ReadCommandCallback implements IStateCallback<SmtpRequestSequencer>
     @Override
     public int run(byte[] dataRead, SmtpRequestSequencer stateMachine, AbstractState callingState) {
 
-        String command = new String(dataRead, 0, dataRead.length - 1);
+        String[] commandStr = new String(dataRead, 0, dataRead.length - 2).split(" ", 2);
+        String command = commandStr[0];
+        String params = commandStr.length == 2 ? commandStr[1] : "";
         stateMachine.getSmtpMessage().setCommand(command);
+        stateMachine.getSmtpMessage().setParams(params);
 
-        if(command.equals("DATA")) {
+        if(command.equals("DATA"))
             stateMachine.setCurrentStateIndex(SmtpRequestSequencer.READ_DATA);
-            return IStateMachine.CUT;
-        } else
-            return SmtpRequestSequencer.READ_COMMAND_VALUE;
+
+        return IStateMachine.CUT;
 
     }
 }

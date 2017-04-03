@@ -45,7 +45,7 @@ public class SmtpRequestSequencer extends SmtpMessageSequencer<SmtpRequest> {
     @Override
     public void reset() {
 
-        if(!(smtpMessage.getCommand().equals("DATA") && smtpMessage.getCommandValue().length() == 0)) {
+        if(!(smtpMessage.getCommand().equals("DATA") && smtpMessage.getParams().length() == 0)) {
             super.reset();
             smtpMessage = new SmtpRequest();
         }

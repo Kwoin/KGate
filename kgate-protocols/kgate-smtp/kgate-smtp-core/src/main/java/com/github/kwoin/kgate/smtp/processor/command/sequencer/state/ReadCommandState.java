@@ -14,7 +14,7 @@ public class ReadCommandState extends ReadUntilSequenceState<SmtpRequestSequence
     public ReadCommandState(SmtpRequestSequencer stateMachine) {
 
         super(stateMachine,
-                " ".getBytes(),
+                "\r\n".getBytes(),
                 null,
                 new ReadCommandCallback(),
                 null,

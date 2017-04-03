@@ -7,7 +7,7 @@ public class SmtpRequest extends SmtpMessage {
 
 
     private String command;
-    private String commandValue = "";
+    private String params = "";
 
 
     public String getCommand() {
@@ -24,16 +24,16 @@ public class SmtpRequest extends SmtpMessage {
     }
 
 
-    public String getCommandValue() {
+    public String getParams() {
 
-        return commandValue;
+        return params;
 
     }
 
 
-    public void setCommandValue(String commandValue) {
+    public void setParams(String params) {
 
-        this.commandValue = commandValue;
+        this.params = params;
 
     }
 }

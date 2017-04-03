@@ -1,3 +1,5 @@
+package com.github.kwoin.kgate.smtp;
+
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.RejectException;
@@ -12,6 +14,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -24,7 +27,7 @@ public class SmtpTestUtil {
 
 
     private static SMTPServer smtpServer;
-    private static List<MimeMessage> messages;
+    private static List<MimeMessage> messages = new ArrayList<>();
 
 
     public static void startSmtpServer(int port) {
@@ -65,6 +68,9 @@ public class SmtpTestUtil {
             }
 
         );
+
+        smtpServer.setPort(port);
+        smtpServer.start();
 
     }
 

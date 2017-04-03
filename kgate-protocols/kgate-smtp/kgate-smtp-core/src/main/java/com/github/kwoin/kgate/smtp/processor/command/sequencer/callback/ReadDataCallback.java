@@ -16,7 +16,7 @@ public class ReadDataCallback implements IStateCallback<SmtpRequestSequencer> {
     public int run(byte[] dataRead, SmtpRequestSequencer stateMachine, AbstractState callingState) {
 
         String data = new String(dataRead, 0, dataRead.length - 5);
-        stateMachine.getSmtpMessage().setCommandValue(data);
+        stateMachine.getSmtpMessage().setParams(data);
 
         return IStateMachine.CUT;
 
