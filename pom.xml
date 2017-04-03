@@ -9,7 +9,9 @@
     <version>1.0.8-SNAPSHOT</version>
     <modules>
         <module>kgate-core</module>
-        <module>kgate-http</module>
+        <module>kgate-default</module>
+        <module>kgate-sequencing</module>
+        <module>kgate-protocols</module>
     </modules>
 
     <name>KGate</name>
@@ -18,10 +20,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>4.12</junit.version>
+        <junit.version>5.0.0-M3</junit.version>
+        <junit.platform.version>1.0.0-M3</junit.platform.version>
         <slf4j.version>1.7.21</slf4j.version>
         <findbugs.version>3.0.0</findbugs.version>
         <logback.version>1.1.7</logback.version>
+        <subethamail.version>3.1.7</subethamail.version>
         <project.scm.id>github.com</project.scm.id>
     </properties>
 
@@ -32,6 +36,12 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.subethamail</groupId>
+                <artifactId>subethasmtp</artifactId>
+                <version>${subethamail.version}</version>
             </dependency>
 
         </dependencies>
@@ -52,8 +62,8 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
@@ -74,6 +84,17 @@
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit.platform.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
                 <artifactId>jgitflow-maven-plugin</artifactId>

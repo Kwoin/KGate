@@ -17,6 +17,7 @@ public interface IContext {
 
     EScope getScope();
 
+
     interface EScope {
 
         String name();
