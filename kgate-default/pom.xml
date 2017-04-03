@@ -7,22 +7,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kgate-core</artifactId>
-    <name>KGate :: Core</name>
+    <artifactId>kgate-default</artifactId>
 
     <dependencies>
-
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>2.1</version>
+            <groupId>com.github.kwoin.kgate</groupId>
+            <artifactId>kgate-core</artifactId>
+            <version>${version}</version>
         </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
-        </dependency>
-
     </dependencies>
 
 
