@@ -5,7 +5,6 @@ import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
 import com.github.kwoin.kgate.smtp.model.SmtpRequest;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadCommandState;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadCommandValueState;
 import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadDataState;
 
 
@@ -16,8 +15,7 @@ public class SmtpRequestSequencer extends SmtpMessageSequencer<SmtpRequest> {
 
 
     public static final int READ_COMMAND = 0;
-    public static final int READ_COMMAND_VALUE = 1;
-    public static final int READ_DATA = 2;
+    public static final int READ_DATA = 1;
 
 
     @Override
@@ -25,7 +23,6 @@ public class SmtpRequestSequencer extends SmtpMessageSequencer<SmtpRequest> {
 
         return new AbstractState[] {
                 new ReadCommandState(this),
-                new ReadCommandValueState(this),
                 new ReadDataState(this)
         };
 
