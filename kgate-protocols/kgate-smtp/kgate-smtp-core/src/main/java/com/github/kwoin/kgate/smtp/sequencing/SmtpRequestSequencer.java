@@ -1,11 +1,11 @@
-package com.github.kwoin.kgate.smtp.processor.command.sequencer;
+package com.github.kwoin.kgate.smtp.sequencing;
 
 import com.github.kwoin.kgate.core.context.IContext;
 import com.github.kwoin.kgate.core.gateway.io.IoPoint;
 import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
 import com.github.kwoin.kgate.smtp.model.SmtpRequest;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadCommandState;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.state.ReadDataState;
+import com.github.kwoin.kgate.smtp.sequencing.state.ReadCommandState;
+import com.github.kwoin.kgate.smtp.sequencing.state.ReadDataState;
 
 
 /**

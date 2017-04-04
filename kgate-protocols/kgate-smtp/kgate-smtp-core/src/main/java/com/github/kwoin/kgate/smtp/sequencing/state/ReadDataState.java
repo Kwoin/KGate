@@ -1,8 +1,8 @@
-package com.github.kwoin.kgate.smtp.processor.command.sequencer.state;
+package com.github.kwoin.kgate.smtp.sequencing.state;
 
 import com.github.kwoin.kgate.core.sequencing.state.ReadUntilSequenceState;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.SmtpRequestSequencer;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.callback.ReadDataCallback;
+import com.github.kwoin.kgate.smtp.sequencing.SmtpRequestSequencer;
+import com.github.kwoin.kgate.smtp.sequencing.callback.ReadDataCallback;
 
 
 /**

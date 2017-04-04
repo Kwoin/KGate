@@ -1,4 +1,4 @@
-package com.github.kwoin.kgate.smtp.processor.command.sequencer;
+package com.github.kwoin.kgate.smtp.sequencing;
 
 import com.github.kwoin.kgate.core.sequencing.StateMachineSequencer;
 import com.github.kwoin.kgate.core.sequencing.state.AbstractState;

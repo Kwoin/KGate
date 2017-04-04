@@ -5,8 +5,8 @@ import com.github.kwoin.kgate.core.factory.DefaultResponseSequencerComponentsFac
 import com.github.kwoin.kgate.core.factory.DefaultSequencerGatewayFactorySet;
 import com.github.kwoin.kgate.core.factory.ISequencerGatewayFactorySet;
 import com.github.kwoin.kgate.core.gateway.DefaultSequencerGateway;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.SmtpRequestSequencer;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.SmtpResponseSequencer;
+import com.github.kwoin.kgate.smtp.sequencing.SmtpRequestSequencer;
+import com.github.kwoin.kgate.smtp.sequencing.SmtpResponseSequencer;
 
 
 /**

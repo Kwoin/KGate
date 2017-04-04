@@ -1,8 +1,8 @@
-package com.github.kwoin.kgate.smtp.processor.command.sequencer.callback;
+package com.github.kwoin.kgate.smtp.sequencing.callback;
 
 import com.github.kwoin.kgate.core.sequencing.state.AbstractState;
 import com.github.kwoin.kgate.core.sequencing.state.callback.IStateCallback;
-import com.github.kwoin.kgate.smtp.processor.command.sequencer.SmtpResponseSequencer;
+import com.github.kwoin.kgate.smtp.sequencing.SmtpResponseSequencer;
 
 
 /**
