@@ -98,7 +98,7 @@ public class KGateTlsTest {
         });
 
 
-        IGateway gateway = new DefaultGateway(gatewayFactorySet);
+        AbstractGateway gateway = new DefaultGateway(gatewayFactorySet);
 
         ServerSocket serverSocket = SSLServerSocketFactory.getDefault().createServerSocket(7072);
 

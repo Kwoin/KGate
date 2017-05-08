@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author P. WILLEMET
  */
-public class DefaultGateway implements IGateway {
+public class DefaultGateway implements AbstractGateway {
 
 
     private final Logger logger = LoggerFactory.getLogger(DefaultGateway.class);

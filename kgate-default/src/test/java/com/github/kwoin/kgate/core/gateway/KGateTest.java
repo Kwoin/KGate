@@ -69,7 +69,7 @@ public class KGateTest {
 
         });
 
-        IGateway gateway = new DefaultGateway(gatewayFactorySet);
+        AbstractGateway gateway = new DefaultGateway(gatewayFactorySet);
 
         ServerSocket serverSocket = new ServerSocket(7072);
 

@@ -24,10 +24,10 @@ import java.util.concurrent.Executors;
 /**
  * @author P. WILLEMET
  */
-public class DefaultInputPointManager implements InputPointManager {
+public abstract class AbstractServer {
 
 
-    private final Logger logger = LoggerFactory.getLogger(DefaultInputPointManager.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractServer.class);
 
     protected ServerSocket serverSocket;
     protected ExecutorService threadPool;
@@ -142,18 +142,13 @@ public class DefaultInputPointManager implements InputPointManager {
     }
 
 
-    @Override
-    public void setGatewayFactorySet(IGatewayFactorySet gatewayFactorySet) {
+    public static interface OnNewConnectionCallback {
 
-        this.gatewayFactorySet = gatewayFactorySet;
+
+        void execute(Socket socket);
+
 
     }
 
 
-    @Override
-    public IGatewayFactorySet getGatewayFactorySet() {
-
-        return gatewayFactorySet;
-
-    }
 }
