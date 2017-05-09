@@ -40,8 +40,8 @@ public class SessionManager {
                                                                                   AbstractSequencer<R> serverToClientSequencer,
                                                                                   Chain<R> serverToClientChain) {
 
-        Session<L> leftSession = new Session(input, output, clientToServerSequencer, clientToServerChain);
-        Session<R> rightSession = new Session<R>(output, input, serverToClientSequencer, serverToClientChain);
+        Session<L> leftSession = new Session<>(input, output, clientToServerSequencer, clientToServerChain, true);
+        Session<R> rightSession = new Session<>(output, input, serverToClientSequencer, serverToClientChain, false);
         leftSession.setOppositeSession(rightSession);
         rightSession.setOppositeSession(leftSession);
         leftSessions.add(leftSession);

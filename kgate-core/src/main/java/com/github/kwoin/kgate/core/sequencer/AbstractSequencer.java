@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -33,7 +34,7 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
     @Override
     public boolean hasNext() {
 
-        hasNext &= !input.isInputShutdown();
+        hasNext &= !input.isClosed();
         return hasNext;
 
     }
@@ -48,6 +49,10 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
 
         try {
             return readNextMessage();
+        } catch (SocketException e) {
+            logger.debug("Input read() interrupted because socket has been closed");
+            hasNext = false;
+            return null;
         } catch (IOException e) {
             logger.error("Unexpected error while reading next message", e);
             return null;

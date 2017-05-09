@@ -79,12 +79,16 @@ public class DefaultServer implements IServer {
     @Override
     public void stop() {
 
+        logger.debug("Stopping Server (" + this + ") ...");
+
         started = false;
         try {
             serverSocket.close();
         } catch (IOException e) {
             logger.error("Unexpected error while closin server", e);
         }
+
+        logger.debug("Server (" + this + ") STOPPED");
 
     }
 

@@ -62,6 +62,8 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
             return;
         }
 
+        logger.debug("Starting Gateway (" + this + ") ...");
+
         server.start(left -> {
 
             Socket right = clientFactory.newClient();
@@ -91,6 +93,8 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
 
         started = true;
 
+        logger.debug("Gateway (" + this + ") STARTED");
+
     }
 
 
@@ -101,8 +105,12 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
             return;
         }
 
+        logger.debug("Stopping Gateway (" + this + ") ...");
+
         server.stop();
         SessionManager.getInstance().deleteAllSessions();
+
+        logger.debug("Gateway (" + this + ") STOPPED");
 
     }
 

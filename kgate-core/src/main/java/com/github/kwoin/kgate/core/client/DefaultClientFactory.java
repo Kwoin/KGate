@@ -26,9 +26,7 @@ public class DefaultClientFactory implements IClientFactory {
 
         try {
 
-            KGateConfig.getConfig().setThrowExceptionOnMissing(true);
             String host = KGateConfig.getConfig().getString("kgate.core.client.host");
-            KGateConfig.getConfig().setThrowExceptionOnMissing(false);
             int port = KGateConfig.getConfig().getInt("kgate.core.client.port");
 
             SocketFactory socketFactory = null;

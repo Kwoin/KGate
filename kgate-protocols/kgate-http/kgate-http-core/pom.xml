@@ -2,12 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>kgate-http</artifactId>
-        <groupId>com.github.kwoin.kgate.protocols.http</groupId>
+        <groupId>com.github.kwoin.kgate.protocols</groupId>
         <version>1.0.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>kgate-http-core</artifactId>
+    <groupId>com.github.kwoin.kgate.protocols.http</groupId>
 
     <properties>
         <jetty.version>9.3.9.v20160517</jetty.version>
@@ -15,11 +16,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.github.kwoin.kgate</groupId>
-            <artifactId>kgate-sequencing</artifactId>
-            <version>${version}</version>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
@@ -32,7 +28,6 @@
             <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 

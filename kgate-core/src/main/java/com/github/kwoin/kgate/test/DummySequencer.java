@@ -1,6 +1,7 @@
-package com.github.kwoin.kgate.core.sequencer;
+package com.github.kwoin.kgate.test;
 
 import com.github.kwoin.kgate.core.message.Message;
+import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,8 +36,8 @@ public class DummySequencer extends AbstractSequencer<Message> {
                 break;
         }
 
-        if(read == -1)
-            input.close();
+        if(read == -1 || "bye!".equals(baos.toString()))
+            hasNext = false;
 
         return new Message(baos.toByteArray());
 
