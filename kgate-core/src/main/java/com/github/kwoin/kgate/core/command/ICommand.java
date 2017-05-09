@@ -1,9 +1,10 @@
 package com.github.kwoin.kgate.core.command;
 
-import com.github.kwoin.kgate.core.command.chain.DefaultChain;
+import com.github.kwoin.kgate.core.command.chain.Chain;
 import com.github.kwoin.kgate.core.message.Message;
+import com.github.kwoin.kgate.core.session.Session;
 
-import java.net.Socket;
+import java.io.IOException;
 
 
 /**
@@ -12,10 +13,9 @@ import java.net.Socket;
 public interface ICommand<T extends Message> {
 
 
-    void execute(Socket input,
-                 Socket output,
-                 DefaultChain<T> callingChain,
-                 T message);
+    void execute(Session<T> session,
+                 Chain<T> callingChain,
+                 T message) throws IOException;
 
 
 }

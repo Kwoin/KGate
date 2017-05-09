@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author P. WILLEMET
  */
-class DefaultChainTest {
+class ChainTest {
 
 
     int read;

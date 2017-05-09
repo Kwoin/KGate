@@ -1,12 +1,12 @@
 package com.github.kwoin.kgate.core.session;
 
-import com.github.kwoin.kgate.core.command.chain.DefaultChain;
+import com.github.kwoin.kgate.core.command.chain.Chain;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -16,7 +16,7 @@ public class SessionManager {
 
 
     private static final SessionManager ourInstance = new SessionManager();
-    private static final List<Session> sessions = new ArrayList<>();
+    private static final Set<Session> leftSessions = new HashSet<>();
 
 
     public static SessionManager getInstance() {
@@ -33,27 +33,42 @@ public class SessionManager {
     }
 
 
-    public synchronized <T extends Message> void createSession(Socket input, Socket output, AbstractSequencer<T> sequencer, DefaultChain<T> chain) {
+    public synchronized <L extends Message, R extends Message> void createSession(Socket input,
+                                                                                  Socket output,
+                                                                                  AbstractSequencer<L> clientToServerSequencer,
+                                                                                  Chain<L> clientToServerChain,
+                                                                                  AbstractSequencer<R> serverToClientSequencer,
+                                                                                  Chain<R> serverToClientChain) {
 
-        Session<T> session = new Session(input, output, sequencer, chain);
-        sessions.add(session);
-        session.start();
+        Session<L> leftSession = new Session(input, output, clientToServerSequencer, clientToServerChain);
+        Session<R> rightSession = new Session<R>(output, input, serverToClientSequencer, serverToClientChain);
+        leftSession.setOppositeSession(rightSession);
+        rightSession.setOppositeSession(leftSession);
+        leftSessions.add(leftSession);
+        leftSession.start();
+        rightSession.start();
 
     }
 
 
-    public synchronized void deleteSession(Session session) {
+    public synchronized void deleteBothSessions(Session leftSession) {
 
-        session.stop();
-        sessions.remove(session);
+        if(!leftSessions.remove(leftSession))
+            throw new IllegalArgumentException("Not a left Session");
+
+        leftSession.stop();
+        leftSession.getOppositeSession().stop();
 
     }
 
 
     public synchronized void deleteAllSessions() {
 
-        for (int i = sessions.size() - 1; i >= 0; i--)
-            sessions.remove(i).stop();
+        for (Session leftSession : leftSessions) {
+            leftSession.stop();
+            leftSession.getOppositeSession().stop();
+        }
+        leftSessions.clear();
 
     }
 

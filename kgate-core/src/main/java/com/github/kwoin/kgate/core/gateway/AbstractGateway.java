@@ -1,17 +1,25 @@
 package com.github.kwoin.kgate.core.gateway;
 
+import com.github.kwoin.kgate.core.client.DefaultClientFactory;
 import com.github.kwoin.kgate.core.client.IClientFactory;
-import com.github.kwoin.kgate.core.command.chain.DefaultChain;
+import com.github.kwoin.kgate.core.command.ICommand;
+import com.github.kwoin.kgate.core.command.ICommandFactory;
+import com.github.kwoin.kgate.core.command.chain.Chain;
+import com.github.kwoin.kgate.core.command.chain.DefaultChainFactory;
 import com.github.kwoin.kgate.core.command.chain.IChainFactory;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
+import com.github.kwoin.kgate.core.server.DefaultServer;
 import com.github.kwoin.kgate.core.server.IServer;
 import com.github.kwoin.kgate.core.session.SessionManager;
+import com.github.kwoin.kgate.core.transmitter.Transmitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,7 +35,24 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
     protected ISequencerFactory<R> serverToClientSequencerFactory;
     protected IChainFactory<L> clientToServerChainFactory;
     protected IChainFactory<R> serverToClientChainFactory;
+    protected final List<ICommandFactory<L>> clientToServerCommandFactoryList = new ArrayList<>();
+    protected final List<ICommandFactory<R>> serverToClientCommandFactoryList = new ArrayList<>();
+    protected Transmitter<L> toServerTransmitter;
+    protected Transmitter<R> toClientTransmitter;
     protected boolean started;
+
+
+    public AbstractGateway() {
+
+        server = new DefaultServer();
+        clientFactory = new DefaultClientFactory();
+        clientToServerChainFactory = new DefaultChainFactory<L>();
+        serverToClientChainFactory = new DefaultChainFactory<R>();
+        toServerTransmitter = new Transmitter<L>();
+        toClientTransmitter = new Transmitter<R>();
+        started = false;
+
+    }
 
 
     public void start() {
@@ -40,13 +65,27 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
         server.start(left -> {
 
             Socket right = clientFactory.newClient();
-            AbstractSequencer<L> clientToServerSequencer = clientToServerSequencerFactory.newSequencer();
-            AbstractSequencer<R> serverToClientSequencer = serverToClientSequencerFactory.newSequencer();
-            DefaultChain<L> clientToServerChain = clientToServerChainFactory.newChain();
-            DefaultChain<R> serverToClientChain = serverToClientChainFactory.newChain();
+            AbstractSequencer<L> clientToServerSequencer = clientToServerSequencerFactory.newSequencer(left);
+            AbstractSequencer<R> serverToClientSequencer = serverToClientSequencerFactory.newSequencer(right);
 
-            SessionManager.getInstance().createSession(left, right, clientToServerSequencer, clientToServerChain);
-            SessionManager.getInstance().createSession(right, left, serverToClientSequencer, serverToClientChain);
+            List<ICommand<L>> leftCommands = new ArrayList<>();
+            for (ICommandFactory<L> commandFactory : clientToServerCommandFactoryList)
+                leftCommands.add(commandFactory.newCommand());
+            leftCommands.add(toServerTransmitter);
+            List<ICommand<R>> rightCommands = new ArrayList<>();
+            for (ICommandFactory<R> commandFactory : serverToClientCommandFactoryList)
+                rightCommands.add(commandFactory.newCommand());
+            rightCommands.add(toClientTransmitter);
+
+            Chain<L> clientToServerChain = clientToServerChainFactory.newChain(leftCommands);
+            Chain<R> serverToClientChain = serverToClientChainFactory.newChain(rightCommands);
+
+            SessionManager.getInstance().createSession(left,
+                    right,
+                    clientToServerSequencer,
+                    clientToServerChain,
+                    serverToClientSequencer,
+                    serverToClientChain);
 
         });
 
@@ -64,6 +103,20 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
 
         server.stop();
         SessionManager.getInstance().deleteAllSessions();
+
+    }
+
+
+    public void addClientToServerCommandFactory(ICommandFactory<L> commandFactory) {
+
+        clientToServerCommandFactoryList.add(commandFactory);
+
+    }
+
+
+    public void addServerToClientCommandFactory(ICommandFactory<R> commandFactory) {
+
+        serverToClientCommandFactoryList.add(commandFactory);
 
     }
 

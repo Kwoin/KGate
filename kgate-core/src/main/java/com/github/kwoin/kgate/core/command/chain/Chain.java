@@ -2,21 +2,22 @@ package com.github.kwoin.kgate.core.command.chain;
 
 import com.github.kwoin.kgate.core.command.ICommand;
 import com.github.kwoin.kgate.core.message.Message;
+import com.github.kwoin.kgate.core.session.Session;
 
-import java.net.Socket;
+import java.io.IOException;
 
 
 /**
  * @author P. WILLEMET
  */
-public class DefaultChain<T extends Message> implements ICommand<T> {
+public class Chain<T extends Message> implements ICommand<T> {
 
 
     protected boolean interrupted;
     protected Iterable<ICommand<T>> commands;
 
 
-    public DefaultChain(Iterable<ICommand<T>> commands) {
+    public Chain(Iterable<ICommand<T>> commands) {
 
         this.commands = commands;
         interrupted = false;
@@ -25,14 +26,13 @@ public class DefaultChain<T extends Message> implements ICommand<T> {
 
 
     @Override
-    public void execute(Socket input,
-                        Socket output,
-                        DefaultChain<T> callingChain,
-                        T message) {
+    public void execute(Session<T> session,
+                        Chain<T> callingChain,
+                        T message) throws IOException {
 
         for (ICommand<T> command : commands) {
 
-            command.execute(input, output, this, message);
+            command.execute(session, this, message);
 
             if(interrupted) {
                 if(callingChain != null)
