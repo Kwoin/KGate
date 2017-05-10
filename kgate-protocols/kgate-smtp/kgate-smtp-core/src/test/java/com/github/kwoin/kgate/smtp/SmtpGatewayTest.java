@@ -5,6 +5,7 @@ import com.github.kwoin.kgate.core.command.chain.Chain;
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.session.Session;
+import com.github.kwoin.kgate.debug.command.LoggerCommand;
 import com.github.kwoin.kgate.smtp.gateway.SmtpGateway;
 import com.github.kwoin.kgate.smtp.message.SmtpRequest;
 import com.github.kwoin.kgate.smtp.message.SmtpResponse;
@@ -43,7 +44,9 @@ public class SmtpGatewayTest {
         KGateConfig.getConfig().setProperty("kgate.core.server.host", "127.0.0.1");
         KGateConfig.getConfig().setProperty("kgate.core.server.port", "25252");
         gateway.addClientToServerCommandFactory(() -> requestStore);
+        gateway.addClientToServerCommandFactory(LoggerCommand::new);
         gateway.addServerToClientCommandFactory(() -> responseStore);
+        gateway.addServerToClientCommandFactory(LoggerCommand::new);
 
     }
 
@@ -73,11 +76,12 @@ public class SmtpGatewayTest {
 
 
     @Test
-    void testSmtpGateway() throws MessagingException {
+    void testSmtpGateway() throws MessagingException, InterruptedException {
 
         MimeMessage message = SmtpTestUtil.initMessage("emitter@test.fr", "receiver1@test.fr", "receiver2@test.fr");
         message.setText("TEST");
         SmtpTestUtil.sendMessage(message);
+        Thread.sleep(500);
         List<SmtpRequest> requests = requestStore.getMessages();
         List<SmtpResponse> responses = responseStore.getMessages();
         assertEquals(7, requests.size());

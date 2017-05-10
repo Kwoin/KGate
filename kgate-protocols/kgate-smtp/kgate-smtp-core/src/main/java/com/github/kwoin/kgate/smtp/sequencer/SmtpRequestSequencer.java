@@ -24,22 +24,12 @@ public class SmtpRequestSequencer extends AbstractSequencer<SmtpRequest> {
     private static final byte[] END_OF_DATA = "\r\n.\r\n".getBytes();
     private static final byte[] END_OF_COMMAND = "\r\n".getBytes();
     private boolean readData;
-    private boolean waitForResponse;
 
 
     @Override
     protected SmtpRequest readNextMessage() throws IOException {
 
-        while(waitForResponse);
-
         return readData ? readSmtpData() : readSmtpCommand();
-
-    }
-
-
-    public void setWaitForResponse(boolean waitForResponse) {
-
-        this.waitForResponse = waitForResponse;
 
     }
 
@@ -53,6 +43,8 @@ public class SmtpRequestSequencer extends AbstractSequencer<SmtpRequest> {
 
     private SmtpData readSmtpData() throws IOException {
 
+        logger.debug("Reading Data...");
+
         byte[] mailBytes = readUntil(END_OF_DATA, false);
 
         Message message = null;
@@ -63,12 +55,17 @@ public class SmtpRequestSequencer extends AbstractSequencer<SmtpRequest> {
         }
 
         readData = false;
+
+        logger.debug("Data read");
+
         return new SmtpData(baos.toByteArray(), message);
 
     }
 
 
     private SmtpCommand readSmtpCommand() throws IOException {
+
+        logger.debug("Reading Command...");
 
         byte[] commandBytes = readUntil(END_OF_COMMAND, false);
 
@@ -78,7 +75,9 @@ public class SmtpRequestSequencer extends AbstractSequencer<SmtpRequest> {
         String parameters = splittedSmtpCommand.length == 2 ? splittedSmtpCommand[1] : null;
 
         if(command.equals("DATA"))
-            waitForResponse = true;
+            waitForOppositeSessionSignal();
+
+        logger.debug("Command read");
 
         return new SmtpCommand(baos.toByteArray(), command, parameters);
 

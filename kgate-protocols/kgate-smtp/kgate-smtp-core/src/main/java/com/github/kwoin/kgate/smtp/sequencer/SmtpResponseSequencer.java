@@ -41,7 +41,7 @@ public class SmtpResponseSequencer extends AbstractSequencer<SmtpResponse> {
 
         SmtpRequestSequencer requestSequencer = (SmtpRequestSequencer) session.getOppositeSession().getSequencer();
         requestSequencer.setReadData(code == 354);
-        requestSequencer.setWaitForResponse(false);
+        requestSequencer.oppositeSessionSignal();
 
         if(code == 221)
             SessionManager.getInstance().deleteBothSessions(session.getOppositeSession());

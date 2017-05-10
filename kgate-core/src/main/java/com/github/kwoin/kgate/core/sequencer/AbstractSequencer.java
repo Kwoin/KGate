@@ -12,6 +12,7 @@ import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CountDownLatch;
 
 
 /**
@@ -24,6 +25,7 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
     protected Session<T> session;
     protected boolean hasNext;
     protected final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    protected @Nullable CountDownLatch oppositeSessionSignal;
 
 
     public void setSession(Session<T> session) {
@@ -52,6 +54,15 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
 
         baos.reset();
 
+        if(oppositeSessionSignal != null) {
+            try {
+                oppositeSessionSignal.await();
+            } catch (InterruptedException e) {
+                logger.warn("Waiting for opposite session signal interrupted");
+                oppositeSessionSignal = null;
+            }
+        }
+
         try {
             return readNextMessage();
         } catch (SocketException e) {
@@ -68,6 +79,25 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
 
     protected abstract T readNextMessage() throws IOException;
 
+
+    protected void waitForOppositeSessionSignal() {
+
+        if(oppositeSessionSignal == null) {
+            logger.debug("Wait for opposite session...");
+            oppositeSessionSignal = new CountDownLatch(1);
+        }
+
+    }
+
+
+    public void oppositeSessionSignal() {
+
+        if(oppositeSessionSignal != null) {
+            logger.debug("wait for opposite session RELEASED");
+            oppositeSessionSignal.countDown();
+        }
+
+    }
 
 
     protected byte readByte() throws IOException {
