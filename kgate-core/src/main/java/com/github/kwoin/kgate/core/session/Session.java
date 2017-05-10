@@ -123,7 +123,7 @@ public class Session<T extends Message> implements Runnable {
 
             }
 
-            if(leftSession)
+            if(started && leftSession)
                 SessionManager.getInstance().deleteBothSessions(this);
 
         } catch (IOException e) {

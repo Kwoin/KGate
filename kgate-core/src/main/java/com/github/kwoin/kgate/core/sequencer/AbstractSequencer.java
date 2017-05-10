@@ -1,13 +1,15 @@
 package com.github.kwoin.kgate.core.sequencer;
 
 import com.github.kwoin.kgate.core.message.Message;
+import com.github.kwoin.kgate.core.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -19,14 +21,15 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
 
 
     private final Logger logger = LoggerFactory.getLogger(AbstractSequencer.class);
-    protected Socket input;
+    protected Session<T> session;
     protected boolean hasNext;
+    protected final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 
-    public AbstractSequencer(Socket input) {
+    public void setSession(Session<T> session) {
 
-        this.input = input;
-        hasNext = !input.isInputShutdown();
+        this.session = session;
+        hasNext = !session.getInput().isInputShutdown();
 
     }
 
@@ -34,7 +37,7 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
     @Override
     public boolean hasNext() {
 
-        hasNext &= !input.isClosed();
+        hasNext &= !session.getInput().isClosed();
         return hasNext;
 
     }
@@ -46,6 +49,8 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
 
         if(!hasNext())
             throw new NoSuchElementException();
+
+        baos.reset();
 
         try {
             return readNextMessage();
@@ -62,6 +67,47 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
 
 
     protected abstract T readNextMessage() throws IOException;
+
+
+
+    protected byte readByte() throws IOException {
+
+        int read = session.getInput().getInputStream().read();
+        baos.write(read);
+        return (byte) read;
+
+    }
+
+
+    protected byte[] readBytes(int n) throws IOException {
+
+        byte[] bytes = new byte[n];
+        for (int i = 0; i < n; i++)
+            bytes[i] = readByte();
+
+        return bytes;
+
+    }
+
+
+    protected byte[] readUntil(byte[] end, boolean withEnd) throws IOException {
+
+        int read;
+        int cursor = 0;
+        ByteArrayOutputStream tmpBaos = new ByteArrayOutputStream();
+
+        while(cursor < end.length) {
+
+            read = readByte();
+            cursor = read == end[cursor] ? cursor + 1 : 0;
+            tmpBaos.write(read);
+
+        }
+
+        byte[] bytes = tmpBaos.toByteArray();
+        return withEnd ? bytes : Arrays.copyOf(bytes, bytes.length - end.length);
+
+    }
 
 
 }

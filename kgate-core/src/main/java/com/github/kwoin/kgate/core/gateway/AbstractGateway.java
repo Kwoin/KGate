@@ -67,8 +67,8 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
         server.start(left -> {
 
             Socket right = clientFactory.newClient();
-            AbstractSequencer<L> clientToServerSequencer = clientToServerSequencerFactory.newSequencer(left);
-            AbstractSequencer<R> serverToClientSequencer = serverToClientSequencerFactory.newSequencer(right);
+            AbstractSequencer<L> clientToServerSequencer = clientToServerSequencerFactory.newSequencer();
+            AbstractSequencer<R> serverToClientSequencer = serverToClientSequencerFactory.newSequencer();
 
             List<ICommand<L>> leftCommands = new ArrayList<>();
             for (ICommandFactory<L> commandFactory : clientToServerCommandFactoryList)

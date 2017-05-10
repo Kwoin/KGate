@@ -41,7 +41,9 @@ public class SessionManager {
                                                                                   Chain<R> serverToClientChain) {
 
         Session<L> leftSession = new Session<>(input, output, clientToServerSequencer, clientToServerChain, true);
+        clientToServerSequencer.setSession(leftSession);
         Session<R> rightSession = new Session<>(output, input, serverToClientSequencer, serverToClientChain, false);
+        serverToClientSequencer.setSession(rightSession);
         leftSession.setOppositeSession(rightSession);
         rightSession.setOppositeSession(leftSession);
         leftSessions.add(leftSession);

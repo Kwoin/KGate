@@ -34,14 +34,14 @@ public class KGateTest {
         {
             clientToServerSequencerFactory = new ISequencerFactory<Message>() {
                 @Override
-                public AbstractSequencer<Message> newSequencer(Socket input) {
-                    return new DummySequencer(input);
+                public AbstractSequencer<Message> newSequencer() {
+                    return new DummySequencer();
                 }
             };
             serverToClientSequencerFactory = new ISequencerFactory<Message>() {
                 @Override
-                public AbstractSequencer<Message> newSequencer(Socket input) {
-                    return new DummySequencer(input);
+                public AbstractSequencer<Message> newSequencer() {
+                    return new DummySequencer();
                 }
             };
             toServerTransmitter = new Transmitter<>();
