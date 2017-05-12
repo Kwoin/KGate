@@ -7,6 +7,7 @@ import com.github.kwoin.kgate.core.command.ICommandFactory;
 import com.github.kwoin.kgate.core.command.chain.Chain;
 import com.github.kwoin.kgate.core.command.chain.DefaultChainFactory;
 import com.github.kwoin.kgate.core.command.chain.IChainFactory;
+import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
@@ -66,6 +67,8 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
 
         server.start(left -> {
 
+            logger.debug("New Connexion !");
+
             Socket right = clientFactory.newClient();
             AbstractSequencer<L> clientToServerSequencer = clientToServerSequencerFactory.newSequencer();
             AbstractSequencer<R> serverToClientSequencer = serverToClientSequencerFactory.newSequencer();
@@ -93,7 +96,10 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
 
         started = true;
 
-        logger.debug("Gateway (" + this + ") STARTED");
+        if(logger.isDebugEnabled())
+            logger.debug("Gateway (" + this + ") STARTED" +
+                    "\nlistening on " + KGateConfig.getConfig().getString("kgate.core.server.host") + ":" + KGateConfig.getConfig().getString("kgate.core.server.port") +
+                    "\nforwarding to " + KGateConfig.getConfig().getString("kgate.core.client.host") + ":" + KGateConfig.getConfig().getString("kgate.core.client.port"));
 
     }
 
@@ -109,6 +115,7 @@ public abstract class AbstractGateway<L extends Message, R extends Message> {
 
         server.stop();
         SessionManager.getInstance().deleteAllSessions();
+        started = false;
 
         logger.debug("Gateway (" + this + ") STOPPED");
 

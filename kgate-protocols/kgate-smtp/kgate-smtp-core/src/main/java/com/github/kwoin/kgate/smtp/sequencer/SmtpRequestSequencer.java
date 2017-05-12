@@ -34,6 +34,14 @@ public class SmtpRequestSequencer extends AbstractSequencer<SmtpRequest> {
     }
 
 
+    @Override
+    protected void resetState() {
+
+        readData = false;
+
+    }
+
+
     public void setReadData(boolean readData) {
 
         this.readData = readData;
@@ -53,8 +61,6 @@ public class SmtpRequestSequencer extends AbstractSequencer<SmtpRequest> {
         } catch (MessagingException e) {
             logger.error("Unexpected error : incorrect Mail format");
         }
-
-        readData = false;
 
         logger.debug("Data read");
 

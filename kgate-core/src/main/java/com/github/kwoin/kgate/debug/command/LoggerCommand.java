@@ -22,7 +22,7 @@ public class LoggerCommand<T extends Message> implements ICommand<T> {
     @Override
     public void execute(Session<T> session, Chain<T> callingChain, T message) throws IOException {
 
-        logger.debug("NEW " + message.getClass().getSimpleName() + "\n" + new String(message.getOriginal()));
+        logger.debug("NEW " + message.getClass().getSimpleName() + "\n" + new String(message.getToBeTransmitted()));
 
     }
 }

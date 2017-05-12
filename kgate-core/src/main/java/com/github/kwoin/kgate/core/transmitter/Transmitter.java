@@ -17,7 +17,7 @@ public class Transmitter<T extends Message> implements ICommand<T> {
     @Override
     public void execute(Session<T> session, Chain<T> callingChain, T message) throws IOException {
 
-        session.getOutput().getOutputStream().write(message.getOriginal());
+        session.getOutput().getOutputStream().write(message.getToBeTransmitted());
 
     }
 

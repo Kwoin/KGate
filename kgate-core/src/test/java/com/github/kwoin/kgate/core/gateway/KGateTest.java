@@ -5,7 +5,7 @@ import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 import com.github.kwoin.kgate.core.sequencer.ISequencerFactory;
 import com.github.kwoin.kgate.core.transmitter.Transmitter;
-import com.github.kwoin.kgate.test.DummySequencer;
+import com.github.kwoin.kgate.test.sequencer.DummySequencer;
 import com.github.kwoin.kgate.test.DummyServer;
 import org.junit.jupiter.api.Test;
 
@@ -96,7 +96,7 @@ public class KGateTest {
     @Test
     public void tlsTest() throws IOException, NoSuchAlgorithmException, KeyManagementException {
 
-        System.setProperty("javax.net.debug", "all");
+        //System.setProperty("javax.net.debug", "all"); incompatible with surefire ? needs investigation
         KGateConfig.getConfig().setProperty("kgate.core.security.tlsEnabled", "true");
         System.setProperty("javax.net.ssl.keyStore", KGateConfig.getConfig().getString("kgate.core.security.keystore.path"));
         System.setProperty("javax.net.ssl.keyStorePassword", KGateConfig.getConfig().getString("kgate.core.security.keystore.password"));

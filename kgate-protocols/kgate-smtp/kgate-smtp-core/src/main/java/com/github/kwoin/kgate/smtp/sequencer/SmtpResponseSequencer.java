@@ -51,4 +51,11 @@ public class SmtpResponseSequencer extends AbstractSequencer<SmtpResponse> {
     }
 
 
+    @Override
+    protected void resetState() {
+
+
+
+    }
+
 }

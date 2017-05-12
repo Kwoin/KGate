@@ -15,8 +15,8 @@ public class SmtpGateway extends AbstractGateway<SmtpRequest, SmtpResponse> {
 
     public SmtpGateway() {
 
-        clientToServerSequencerFactory = () -> new SmtpRequestSequencer();
-        serverToClientSequencerFactory = () -> new SmtpResponseSequencer();
+        clientToServerSequencerFactory = SmtpRequestSequencer::new;
+        serverToClientSequencerFactory = SmtpResponseSequencer::new;
 
     }
 

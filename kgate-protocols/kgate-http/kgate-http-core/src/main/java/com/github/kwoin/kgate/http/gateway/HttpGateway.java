@@ -1,32 +1,22 @@
 package com.github.kwoin.kgate.http.gateway;
 
-import com.github.kwoin.kgate.core.factory.DefaultRequestSequencerComponentsFactory;
-import com.github.kwoin.kgate.core.factory.DefaultResponseSequencerComponentsFactory;
-import com.github.kwoin.kgate.core.factory.DefaultSequencerGatewayFactorySet;
-import com.github.kwoin.kgate.core.factory.ISequencerGatewayFactorySet;
-import com.github.kwoin.kgate.core.gateway.DefaultSequencerGateway;
-import com.github.kwoin.kgate.http.sequencing.HttpRequestSequencer;
-import com.github.kwoin.kgate.http.sequencing.HttpResponseSequencer;
+import com.github.kwoin.kgate.core.gateway.AbstractGateway;
+import com.github.kwoin.kgate.http.message.HttpRequest;
+import com.github.kwoin.kgate.http.message.HttpResponse;
+import com.github.kwoin.kgate.http.sequencer.HttpRequestSequencer;
+import com.github.kwoin.kgate.http.sequencer.HttpResponseSequencer;
 
 
 /**
  * @author P. WILLEMET
  */
-public class HttpGateway extends DefaultSequencerGateway {
-
-
-    public HttpGateway(ISequencerGatewayFactorySet gatewayFactorySet) {
-
-        super(gatewayFactorySet);
-
-    }
+public class HttpGateway extends AbstractGateway<HttpRequest, HttpResponse> {
 
 
     public HttpGateway() {
 
-        this(new DefaultSequencerGatewayFactorySet());
-        getGatewayFactorySet().getProcessorComponentsFactory().setRequestSequencerCommandComponentsFactory(new DefaultRequestSequencerComponentsFactory(HttpRequestSequencer.class));
-        getGatewayFactorySet().getProcessorComponentsFactory().setResponseSequencerCommandComponentsFactory(new DefaultResponseSequencerComponentsFactory(HttpResponseSequencer.class));
+        clientToServerSequencerFactory = HttpRequestSequencer::new;
+        serverToClientSequencerFactory = HttpResponseSequencer::new;
 
     }
 

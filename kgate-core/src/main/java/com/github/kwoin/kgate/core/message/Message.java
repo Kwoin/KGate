@@ -6,19 +6,26 @@ package com.github.kwoin.kgate.core.message;
 public class Message {
 
 
-    protected byte[] original;
+    protected byte[] toBeTransmitted;
 
 
     public Message(byte[] original) {
 
-        this.original = original;
+        this.toBeTransmitted = original;
 
     }
 
 
-    public byte[] getOriginal() {
+    public byte[] getToBeTransmitted() {
 
-        return original;
+        return toBeTransmitted;
+
+    }
+
+
+    public void setToBeTransmitted(byte[] toBeTransmitted) {
+
+        this.toBeTransmitted = toBeTransmitted;
 
     }
 

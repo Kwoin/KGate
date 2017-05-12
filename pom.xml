@@ -9,7 +9,6 @@
     <version>1.0.9-SNAPSHOT</version>
     <modules>
         <module>kgate-core</module>
-        <module>kgate-sequencing</module>
         <module>kgate-protocols</module>
     </modules>
 

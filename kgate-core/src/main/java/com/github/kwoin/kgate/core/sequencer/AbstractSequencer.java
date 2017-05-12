@@ -72,12 +72,17 @@ public abstract class AbstractSequencer<T extends Message> implements Iterator<T
         } catch (IOException e) {
             logger.error("Unexpected error while reading next message", e);
             return null;
+        } finally {
+            resetState();
         }
 
     }
 
 
     protected abstract T readNextMessage() throws IOException;
+
+
+    protected abstract void resetState();
 
 
     protected void waitForOppositeSessionSignal() {
