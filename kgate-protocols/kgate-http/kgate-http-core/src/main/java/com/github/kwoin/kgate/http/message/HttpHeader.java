@@ -6,7 +6,7 @@ package com.github.kwoin.kgate.http.message;
 public class HttpHeader {
 
 
-    private String key;
+    private final String key;
     private String value;
 
 
@@ -28,6 +28,13 @@ public class HttpHeader {
     public String getValue() {
 
         return value;
+
+    }
+
+
+    public void setValue(String value) {
+
+        this.value = value;
 
     }
 }

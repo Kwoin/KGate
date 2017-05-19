@@ -1,5 +1,8 @@
 package com.github.kwoin.kgate.http.message;
 
+import java.util.List;
+
+
 /**
  * @author P. WILLEMET
  */
@@ -10,7 +13,7 @@ public class HttpResponse extends HttpMessage {
     private String reasonPhrase;
 
 
-    public HttpResponse(byte[] original, String httpVersion, HttpHeader[] headers, String body, String statusCode, String reasonPhrase) {
+    public HttpResponse(byte[] original, String httpVersion, List<HttpHeader> headers, String body, String statusCode, String reasonPhrase) {
 
         super(original, httpVersion, headers, body);
         this.statusCode = statusCode;
@@ -26,9 +29,23 @@ public class HttpResponse extends HttpMessage {
     }
 
 
+    public void setStatusCode(String statusCode) {
+
+        this.statusCode = statusCode;
+
+    }
+
+
     public String getReasonPhrase() {
 
         return reasonPhrase;
+
+    }
+
+
+    public void setReasonPhrase(String reasonPhrase) {
+
+        this.reasonPhrase = reasonPhrase;
 
     }
 
@@ -54,5 +71,6 @@ public class HttpResponse extends HttpMessage {
         return sb.toString();
 
     }
+
 
 }

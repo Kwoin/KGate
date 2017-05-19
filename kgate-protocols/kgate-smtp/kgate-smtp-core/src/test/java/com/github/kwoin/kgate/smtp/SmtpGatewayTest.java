@@ -5,7 +5,7 @@ import com.github.kwoin.kgate.core.command.chain.Chain;
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.session.Session;
-import com.github.kwoin.kgate.debug.command.LoggerCommand;
+import com.github.kwoin.kgate.core.command.LoggerCommand;
 import com.github.kwoin.kgate.smtp.gateway.SmtpGateway;
 import com.github.kwoin.kgate.smtp.message.SmtpRequest;
 import com.github.kwoin.kgate.smtp.message.SmtpResponse;
