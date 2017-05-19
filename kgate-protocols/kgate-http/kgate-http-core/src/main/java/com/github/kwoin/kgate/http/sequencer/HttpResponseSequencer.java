@@ -4,6 +4,7 @@ import com.github.kwoin.kgate.http.message.HttpHeader;
 import com.github.kwoin.kgate.http.message.HttpResponse;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 
 /**
@@ -38,7 +39,7 @@ public class HttpResponseSequencer extends AbstractHttpSequencer<HttpResponse> {
 
 
     @Override
-    protected HttpResponse newHttpMessage(byte[] original, String firstLine, HttpHeader[] headers, String content) {
+    protected HttpResponse newHttpMessage(byte[] original, String firstLine, List<HttpHeader> headers, String content) {
 
         String[] splittedFirstLine = firstLine.split(" ");
         String httpVersion = splittedFirstLine[0];

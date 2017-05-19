@@ -6,6 +6,8 @@ import com.github.kwoin.kgate.http.message.HttpMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,10 +30,10 @@ public abstract class AbstractHttpSequencer<T extends HttpMessage> extends Abstr
 
         String firstLine = new String(readUntil(END_OF_FIRST_LINE, false));
         String[] headerLines = new String(readUntil(END_OF_HEADERS, false)).split(HEADERS_SEPARATOR);
-        HttpHeader[] headers = new HttpHeader[headerLines.length];
+        ArrayList<HttpHeader> headers = new ArrayList<>();
         for (int i = 0; i < headerLines.length; i++) {
             String[] splittedHeaderLine = headerLines[i].split("\\s*:\\s*", 2);
-            headers[i] = new HttpHeader(splittedHeaderLine[0], splittedHeaderLine[1]);
+            headers.add(new HttpHeader(splittedHeaderLine[0], splittedHeaderLine[1]));
         }
 
         String content = null;
@@ -76,7 +78,7 @@ public abstract class AbstractHttpSequencer<T extends HttpMessage> extends Abstr
     }
 
 
-    protected void resolveReadContentMode(HttpHeader[] headers) {
+    protected void resolveReadContentMode(List<HttpHeader> headers) {
 
         for (HttpHeader header : headers) {
             if(header.getKey().equalsIgnoreCase("content-length"))
@@ -91,7 +93,7 @@ public abstract class AbstractHttpSequencer<T extends HttpMessage> extends Abstr
     protected abstract boolean hasContent(String firstLine);
 
 
-    protected abstract T newHttpMessage(byte[] original, String firstLine, HttpHeader[] headers, String content);
+    protected abstract T newHttpMessage(byte[] original, String firstLine, List<HttpHeader> headers, String content);
 
 
 }

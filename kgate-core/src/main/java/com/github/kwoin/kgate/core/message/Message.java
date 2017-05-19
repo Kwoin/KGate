@@ -3,7 +3,7 @@ package com.github.kwoin.kgate.core.message;
 /**
  * @author P. WILLEMET
  */
-public class Message {
+public abstract class Message {
 
 
     protected byte[] toBeTransmitted;
@@ -28,6 +28,16 @@ public class Message {
         this.toBeTransmitted = toBeTransmitted;
 
     }
+
+
+    public void commit() {
+
+        toBeTransmitted = toByteArray();
+
+    }
+
+
+    protected abstract byte[] toByteArray();
 
 
 }

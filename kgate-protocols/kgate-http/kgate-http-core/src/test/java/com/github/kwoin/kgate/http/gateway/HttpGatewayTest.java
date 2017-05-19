@@ -1,7 +1,7 @@
 package com.github.kwoin.kgate.http.gateway;
 
 import com.github.kwoin.kgate.core.configuration.KGateConfig;
-import com.github.kwoin.kgate.debug.command.LoggerCommand;
+import com.github.kwoin.kgate.core.command.LoggerCommand;
 import com.github.kwoin.kgate.test.DummyServer;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.client.HttpClient;

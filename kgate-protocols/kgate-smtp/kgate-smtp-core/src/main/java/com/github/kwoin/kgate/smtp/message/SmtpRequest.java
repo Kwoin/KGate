@@ -6,7 +6,7 @@ import com.github.kwoin.kgate.core.message.Message;
 /**
  * @author P. WILLEMET
  */
-public class SmtpRequest extends Message {
+public abstract class SmtpRequest extends Message {
 
 
     public SmtpRequest(byte[] original) {

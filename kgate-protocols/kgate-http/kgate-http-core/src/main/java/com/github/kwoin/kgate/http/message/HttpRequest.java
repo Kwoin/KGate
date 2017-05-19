@@ -1,5 +1,8 @@
 package com.github.kwoin.kgate.http.message;
 
+import java.util.List;
+
+
 /**
  * @author P. WILLEMET
  */
@@ -10,7 +13,7 @@ public class HttpRequest extends HttpMessage {
     private String requestUri;
 
 
-    public HttpRequest(byte[] toBeTransmitted, String httpVersion, HttpHeader[] headers, String body, String method, String requestUri) {
+    public HttpRequest(byte[] toBeTransmitted, String httpVersion, List<HttpHeader> headers, String body, String method, String requestUri) {
 
         super(toBeTransmitted, httpVersion, headers, body);
         this.method = method;
@@ -26,9 +29,23 @@ public class HttpRequest extends HttpMessage {
     }
 
 
+    public void setMethod(String method) {
+
+        this.method = method;
+
+    }
+
+
     public String getRequestUri() {
 
         return requestUri;
+
+    }
+
+
+    public void setRequestUri(String requestUri) {
+
+        this.requestUri = requestUri;
 
     }
 
@@ -54,5 +71,6 @@ public class HttpRequest extends HttpMessage {
         return sb.toString();
 
     }
+
 
 }

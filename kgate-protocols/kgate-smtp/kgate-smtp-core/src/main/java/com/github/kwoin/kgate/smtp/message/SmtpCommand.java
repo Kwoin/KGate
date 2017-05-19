@@ -29,6 +29,13 @@ public class SmtpCommand extends SmtpRequest {
     }
 
 
+    public void setCommand(String command) {
+
+        this.command = command;
+
+    }
+
+
     public @Nullable String getParameters() {
 
         return parameters;
@@ -36,5 +43,32 @@ public class SmtpCommand extends SmtpRequest {
     }
 
 
+    public void setParameters(@Nullable String parameters) {
 
+        this.parameters = parameters;
+
+    }
+
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder()
+                .append(command);
+
+        if(parameters != null)
+            sb.append(" ").append(parameters);
+
+        return sb.append("\r\n")
+                .toString();
+
+    }
+
+
+    @Override
+    protected byte[] toByteArray() {
+
+        return toString().getBytes();
+
+    }
 }

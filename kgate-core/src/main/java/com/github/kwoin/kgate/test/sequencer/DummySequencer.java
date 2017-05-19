@@ -1,5 +1,6 @@
 package com.github.kwoin.kgate.test.sequencer;
 
+import com.github.kwoin.kgate.core.message.DefaultMessage;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 
@@ -31,7 +32,7 @@ public class DummySequencer extends AbstractSequencer<Message> {
         if(read == -1 || "bye!".equals(baos.toString()))
             hasNext = false;
 
-        return new Message(baos.toByteArray());
+        return new DefaultMessage(baos.toByteArray());
 
     }
 

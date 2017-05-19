@@ -1,6 +1,7 @@
 package com.github.kwoin.kgate.core.session;
 
 import com.github.kwoin.kgate.core.command.chain.Chain;
+import com.github.kwoin.kgate.core.context.Context;
 import com.github.kwoin.kgate.core.message.Message;
 import com.github.kwoin.kgate.core.sequencer.AbstractSequencer;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class Session<T extends Message> implements Runnable {
     protected Socket output;
     protected AbstractSequencer<T> sequencer;
     protected Chain<T> chain;
+    protected Context sessionContext;
     protected Session oppositeSession;
     protected boolean leftSession;
     protected boolean started;
@@ -33,6 +35,7 @@ public class Session<T extends Message> implements Runnable {
         this.sequencer = sequencer;
         this.chain = chain;
         this.leftSession = leftSession;
+        sessionContext = new Context();
         started = false;
 
     }
@@ -62,6 +65,13 @@ public class Session<T extends Message> implements Runnable {
     public Chain<T> getChain() {
 
         return chain;
+
+    }
+
+
+    public Context getSessionContext() {
+
+        return sessionContext;
 
     }
 
